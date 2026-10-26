@@ -1,0 +1,4966 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Biometeonews</title>
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,300..800&family=Source+Serif+4:ital,opsz,wght@0,8..60,400..700;1,8..60,400..700&display=swap" rel="stylesheet">
+
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+
+/* ============================================================
+   SYNOPTIC — design tokens
+   Paper + deep marine ink, cobalt for links, one signal orange.
+   Each category owns a colour (--cat) so rubrics read like a chart legend.
+============================================================ */
+:root{
+  --paper:#F6F8F9;
+  --fog:#E8EDF0;
+  --fog2:#D8E0E6;
+  --surface:#FFFFFF;
+  --ink:#0C2233;
+  --text:#1B2E3F;
+  --muted:#52667A;
+  --line:rgba(12,34,51,.14);
+  --line2:rgba(12,34,51,.30);
+  --accent:#1F4FD8;
+  --accent2:#4F7DF0;
+  --signal:#FF5A1F;
+  --panel:#0C2233;
+  --panel-ink:#EAF1F6;
+  --red:#C62828;
+  --green:#2E7D32;
+  --gold:#F4A826;
+
+  /* legacy names used by the scripts */
+  --sky:var(--ink);--sky2:var(--ink);--sky3:var(--accent);
+  --ice:var(--fog);--ice2:var(--fog2);--cloud:var(--paper);--white:var(--surface);
+  --cyan:var(--accent);--cyan2:var(--accent2);--storm:var(--ink);
+  --gray:var(--muted);--border:var(--line);--border2:var(--line2);
+
+  --shadow:0 1px 2px rgba(12,34,51,.06);
+  --shadow-lg:0 22px 60px -18px rgba(12,34,51,.35);
+  --radius:10px;
+  --wrap:1320px;
+  --font-display:'Bricolage Grotesque','Segoe UI',system-ui,-apple-system,sans-serif;
+  --font-read:'Source Serif 4',Georgia,'Times New Roman',serif;
+  --font-serif:var(--font-display);
+  --font-sans:var(--font-display);
+  --tr:.18s ease;
+
+  --iso:url("data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 1600 700%22 preserveAspectRatio=%22xMidYMid slice%22%3E%3Cg fill=%22none%22 stroke=%22%23000%22 stroke-width=%221.3%22 vector-effect=%22non-scaling-stroke%22%3E%3Cpath vector-effect=%22non-scaling-stroke%22 d=%22M1168 300C1170 304 1172 308 1171 312C1170 316 1168 321 1164 324C1161 327 1155 330 1150 333C1145 335 1138 337 1133 339C1127 341 1122 343 1116 344C1110 346 1104 347 1098 348C1092 349 1086 349 1080 349C1074 348 1068 347 1062 346C1057 345 1052 343 1046 341C1041 340 1036 338 1031 336C1026 335 1020 333 1016 330C1011 328 1006 325 1003 322C1000 319 998 315 997 311C996 308 996 304 997 300C997 296 999 293 1000 289C1001 286 1002 282 1004 278C1005 275 1007 271 1010 267C1014 264 1018 260 1023 258C1028 255 1035 253 1041 252C1047 251 1055 251 1061 251C1068 251 1074 251 1080 252C1086 252 1092 253 1098 254C1103 255 1109 256 1114 258C1120 259 1124 262 1129 264C1133 266 1136 269 1140 272C1143 275 1146 277 1149 280C1152 283 1156 286 1159 289C1162 293 1166 296 1168 300Z%22/%3E%3Cpath vector-effect=%22non-scaling-stroke%22 d=%22M1257 300C1261 308 1264 317 1262 325C1261 333 1255 341 1248 348C1241 355 1230 361 1219 366C1209 371 1196 374 1185 378C1173 381 1162 384 1151 387C1139 390 1128 392 1116 394C1104 395 1092 396 1080 396C1068 396 1056 394 1044 392C1033 390 1022 388 1011 385C1000 382 989 379 979 375C968 371 957 367 948 362C939 357 930 351 925 344C919 338 915 330 914 322C912 315 914 307 916 300C917 293 920 286 923 279C925 272 927 265 931 257C934 250 937 242 943 235C950 229 957 221 967 216C977 211 989 206 1002 204C1014 201 1028 200 1041 200C1054 199 1068 200 1080 202C1092 203 1104 204 1116 207C1127 209 1139 212 1149 215C1159 219 1168 223 1177 228C1185 233 1192 239 1199 244C1206 249 1212 255 1218 260C1225 266 1233 272 1239 278C1246 285 1254 292 1257 300Z%22/%3E%3Cpath vector-effect=%22non-scaling-stroke%22 d=%22M1345 300C1351 312 1354 325 1352 337C1349 349 1341 361 1331 372C1320 382 1304 391 1289 399C1274 406 1255 412 1238 418C1221 423 1204 427 1186 431C1169 435 1152 438 1134 440C1116 442 1098 443 1080 443C1062 443 1044 441 1027 438C1009 436 993 432 976 428C959 424 943 419 927 413C912 408 896 401 882 393C869 385 857 376 848 366C840 356 835 345 832 334C829 323 831 311 833 300C835 289 839 279 842 268C846 257 850 247 855 236C861 225 866 214 876 204C885 193 897 183 912 175C926 167 945 160 963 156C981 152 1002 150 1022 149C1041 148 1061 150 1080 151C1099 153 1117 156 1134 160C1151 163 1168 168 1183 174C1198 179 1212 186 1224 193C1237 200 1247 208 1258 216C1269 224 1279 232 1289 240C1300 249 1311 258 1320 267C1330 277 1340 288 1345 300Z%22/%3E%3Cpath vector-effect=%22non-scaling-stroke%22 d=%22M1433 300C1440 315 1444 333 1441 349C1438 365 1429 382 1415 396C1402 410 1381 422 1361 433C1341 444 1317 452 1295 460C1272 467 1249 473 1225 479C1202 484 1178 488 1153 490C1129 493 1104 493 1080 492C1056 491 1032 487 1010 483C987 478 966 472 945 466C924 460 904 453 884 446C864 438 843 430 825 420C807 411 789 399 777 387C764 374 755 359 749 345C744 330 744 315 744 300C745 285 749 271 753 256C758 241 763 226 770 212C778 197 787 181 801 168C815 155 832 141 853 131C874 121 900 114 925 109C950 104 978 103 1004 102C1030 102 1056 104 1080 106C1104 109 1128 112 1151 116C1173 121 1195 126 1216 133C1236 140 1255 148 1272 157C1289 166 1304 177 1318 187C1333 198 1346 209 1359 220C1373 232 1388 243 1400 257C1412 270 1426 285 1433 300Z%22/%3E%3Cpath vector-effect=%22non-scaling-stroke%22 d=%22M1529 300C1540 319 1547 342 1544 363C1541 383 1527 405 1509 423C1491 440 1463 456 1436 468C1408 481 1376 490 1346 498C1317 506 1287 512 1257 518C1227 523 1198 528 1169 531C1139 534 1109 535 1080 534C1051 534 1021 531 993 527C964 523 937 517 909 510C882 504 854 497 828 487C801 478 774 468 752 455C729 442 708 427 693 410C679 394 671 374 667 356C662 338 666 318 669 300C672 282 678 264 684 246C690 229 695 211 704 193C712 174 720 155 735 137C751 120 770 101 794 88C819 74 850 63 882 56C913 49 949 46 982 46C1015 45 1049 48 1080 52C1111 56 1141 62 1169 69C1197 76 1223 84 1247 94C1271 104 1293 115 1313 127C1333 138 1350 151 1368 164C1386 176 1403 189 1422 202C1440 216 1462 230 1480 246C1498 262 1518 281 1529 300Z%22/%3E%3Cpath vector-effect=%22non-scaling-stroke%22 d=%22M1616 300C1630 323 1641 351 1637 375C1633 400 1615 426 1592 446C1569 467 1532 484 1499 498C1465 512 1427 522 1393 532C1358 543 1325 552 1291 560C1257 568 1224 577 1189 582C1153 587 1116 590 1080 589C1044 588 1008 582 974 576C940 569 908 559 876 551C844 542 813 533 781 522C749 511 714 501 686 486C657 472 627 454 609 434C591 415 581 390 577 368C574 346 582 322 588 300C594 278 605 258 613 237C621 216 625 195 634 173C643 151 649 126 666 104C683 83 706 60 735 44C765 28 805 15 843 8C881 1 925 0 965 0C1004 0 1043 4 1080 8C1117 12 1153 16 1187 22C1221 28 1256 35 1286 46C1317 56 1345 70 1370 85C1394 99 1412 117 1432 134C1452 150 1468 167 1488 184C1508 201 1532 217 1554 236C1575 255 1602 277 1616 300Z%22/%3E%3Cpath vector-effect=%22non-scaling-stroke%22 d=%22M1706 300C1723 327 1737 360 1733 388C1729 417 1709 448 1682 472C1656 496 1613 516 1575 534C1536 551 1491 563 1450 575C1410 588 1371 599 1330 608C1290 618 1250 628 1208 633C1166 638 1122 640 1080 637C1038 635 996 627 958 618C919 609 884 597 848 586C812 575 777 564 741 552C705 540 664 529 630 512C597 496 561 477 538 455C515 432 500 405 494 379C487 354 494 326 499 300C503 274 515 250 523 225C531 199 536 174 547 148C557 122 566 92 587 67C608 42 637 16 673 -2C709 -20 757 -34 803 -41C848 -48 900 -48 946 -47C993 -46 1037 -40 1080 -36C1123 -31 1163 -26 1203 -19C1243 -12 1282 -4 1318 7C1353 19 1386 35 1415 51C1443 68 1465 88 1488 107C1511 126 1530 145 1554 165C1578 184 1606 203 1632 225C1657 248 1689 273 1706 300Z%22/%3E%3Cpath vector-effect=%22non-scaling-stroke%22 d=%22M1794 300C1811 331 1822 367 1816 400C1810 432 1788 466 1758 494C1729 521 1682 545 1639 564C1596 584 1545 597 1498 611C1452 624 1406 635 1360 644C1314 654 1269 664 1222 669C1176 675 1127 679 1080 679C1033 679 984 674 938 668C892 662 847 653 802 642C757 632 712 620 669 605C627 590 582 574 546 552C510 531 475 506 454 479C432 452 420 420 416 390C412 360 421 329 428 300C435 271 449 244 459 216C469 188 478 161 491 132C504 103 515 72 538 44C561 16 590 -14 628 -36C666 -58 715 -77 764 -88C814 -100 871 -105 923 -106C976 -108 1030 -104 1080 -99C1130 -93 1179 -85 1224 -75C1270 -65 1314 -52 1354 -37C1393 -21 1429 -3 1461 17C1494 36 1520 58 1548 79C1576 100 1602 121 1630 143C1658 166 1691 187 1718 214C1746 240 1778 269 1794 300Z%22/%3E%3Cpath vector-effect=%22non-scaling-stroke%22 d=%22M1871 300C1887 334 1897 374 1890 410C1882 445 1859 483 1828 513C1797 544 1749 572 1704 595C1659 618 1606 636 1555 653C1505 670 1455 685 1403 698C1352 710 1299 722 1245 729C1191 735 1134 738 1080 736C1026 734 971 725 920 716C869 706 821 692 773 678C725 664 679 649 633 632C587 615 539 597 498 575C458 552 417 526 389 497C362 468 343 434 333 401C323 368 327 333 331 300C335 267 347 235 358 202C369 170 379 137 396 105C413 72 430 37 460 7C489 -23 527 -55 572 -77C618 -100 676 -117 732 -129C788 -140 851 -143 909 -144C967 -146 1025 -142 1080 -137C1135 -133 1189 -127 1241 -117C1293 -108 1344 -97 1391 -82C1437 -67 1481 -48 1519 -27C1558 -6 1590 20 1621 44C1653 69 1680 94 1709 120C1739 147 1771 173 1798 203C1825 233 1856 266 1871 300Z%22/%3E%3Cpath vector-effect=%22non-scaling-stroke%22 d=%22M1972 300C1995 339 2012 384 2007 425C2001 466 1975 510 1940 545C1904 581 1847 612 1794 637C1741 663 1678 682 1619 701C1561 719 1503 734 1443 747C1384 760 1324 772 1264 777C1203 783 1140 784 1080 779C1020 775 961 762 907 750C852 737 803 720 752 704C701 688 652 673 602 655C552 638 497 621 450 598C403 575 353 548 320 517C286 486 261 449 248 413C234 376 237 337 239 300C242 263 253 227 263 190C273 152 282 115 300 77C317 40 335 -1 368 -36C401 -71 446 -107 499 -132C552 -157 620 -175 686 -185C751 -196 824 -195 890 -194C955 -193 1019 -185 1080 -178C1141 -170 1198 -162 1254 -151C1310 -140 1365 -128 1415 -112C1464 -95 1511 -74 1552 -51C1594 -28 1627 -1 1662 25C1697 51 1727 77 1762 105C1798 133 1838 160 1873 193C1908 225 1950 261 1972 300Z%22/%3E%3Cpath vector-effect=%22non-scaling-stroke%22 d=%22M2063 300C2087 343 2106 393 2099 438C2093 483 2064 531 2024 569C1985 608 1921 641 1862 669C1802 697 1733 718 1669 737C1604 757 1540 773 1476 787C1411 801 1346 814 1281 821C1215 827 1145 829 1080 826C1015 822 949 810 888 797C827 785 771 767 714 750C657 734 601 717 545 698C489 678 428 659 376 633C325 606 272 575 237 541C201 506 177 464 165 424C152 384 158 341 163 300C168 259 182 220 194 180C206 140 215 100 234 59C253 18 271 -27 306 -66C341 -104 388 -144 444 -173C501 -201 575 -222 646 -235C716 -247 797 -248 869 -247C942 -247 1013 -239 1080 -231C1147 -223 1211 -214 1273 -201C1335 -188 1395 -174 1450 -155C1504 -136 1555 -112 1600 -87C1645 -61 1682 -31 1720 -3C1759 26 1792 55 1831 86C1870 116 1914 146 1953 182C1992 218 2038 257 2063 300Z%22/%3E%3Cpath vector-effect=%22non-scaling-stroke%22 d=%22M337 470C336 474 334 478 332 481C330 485 326 488 323 491C320 494 317 496 313 499C310 502 307 504 303 507C299 509 295 512 291 514C286 516 281 517 276 518C271 519 265 519 260 519C255 519 249 518 244 517C239 515 235 514 230 513C225 511 220 510 215 508C211 506 206 504 202 501C198 499 194 496 192 492C189 489 188 485 186 481C185 478 185 474 185 470C185 466 185 462 186 459C187 455 189 451 192 448C194 444 198 441 202 438C206 436 211 434 216 432C221 431 226 430 231 429C236 428 241 428 246 427C250 426 255 425 260 425C265 424 270 423 276 423C281 423 287 424 292 425C297 426 303 428 307 430C312 432 316 435 319 438C323 441 326 444 329 447C332 451 334 455 335 458C336 462 337 466 337 470Z%22/%3E%3Cpath vector-effect=%22non-scaling-stroke%22 d=%22M416 470C415 478 410 486 405 492C399 499 392 505 385 511C378 517 371 521 364 526C357 532 351 537 344 542C337 546 329 552 321 556C312 560 302 563 292 565C282 567 270 567 260 566C250 566 239 564 229 562C219 560 210 557 200 555C190 552 180 550 171 546C161 543 151 539 143 534C135 528 127 522 121 515C115 509 112 501 109 493C106 486 105 478 105 470C105 462 106 454 109 447C111 439 115 431 121 424C126 418 134 411 143 407C152 402 163 399 173 396C184 394 195 393 205 392C215 391 224 390 233 389C242 387 250 385 260 384C270 382 280 379 291 379C301 378 313 378 324 379C335 381 346 384 356 388C366 392 375 398 383 403C390 409 397 416 403 423C408 430 413 438 415 446C418 454 418 462 416 470Z%22/%3E%3Cpath vector-effect=%22non-scaling-stroke%22 d=%22M493 470C491 482 484 493 476 504C468 514 457 523 447 531C437 540 427 547 416 555C406 563 397 570 386 578C376 585 365 593 352 599C338 605 323 611 308 613C293 616 276 616 260 615C244 615 229 611 214 608C199 605 184 601 170 597C155 593 141 589 126 584C112 578 97 573 85 565C73 557 61 548 53 538C44 528 38 516 34 505C30 494 29 482 29 470C28 458 30 446 33 435C37 423 42 411 51 401C59 391 71 382 84 375C98 368 114 363 130 359C145 355 162 354 177 352C192 351 205 350 219 348C233 346 245 342 260 340C275 337 290 334 306 333C322 332 340 331 357 334C373 336 390 341 404 347C419 353 432 362 444 370C455 379 466 389 474 400C482 411 489 422 492 434C495 446 496 458 493 470Z%22/%3E%3Cpath vector-effect=%22non-scaling-stroke%22 d=%22M572 470C568 486 558 501 547 515C536 528 521 540 508 551C494 562 480 572 467 582C453 592 441 603 427 613C413 622 399 633 381 642C364 650 344 657 324 661C304 664 281 665 260 664C239 663 218 658 198 654C178 650 159 645 140 639C121 634 102 628 83 621C64 614 44 606 28 596C11 586 -5 574 -17 561C-28 547 -37 532 -43 517C-49 502 -52 486 -53 470C-53 454 -52 438 -47 422C-42 407 -34 391 -22 378C-10 364 7 352 25 343C44 334 67 328 88 323C109 319 131 318 151 316C171 314 188 313 206 310C225 308 241 304 260 300C279 296 299 291 321 289C342 287 366 286 389 288C411 291 434 297 454 304C474 312 493 323 509 335C525 347 539 361 550 375C560 390 569 406 573 421C577 437 577 454 572 470Z%22/%3E%3Cpath vector-effect=%22non-scaling-stroke%22 d=%22M652 470C648 489 636 509 622 526C608 543 587 558 570 571C552 585 534 596 517 609C500 622 486 635 469 648C452 661 435 677 414 687C393 698 367 708 341 712C316 717 286 716 260 714C234 712 208 705 183 699C158 693 136 686 112 679C87 673 62 667 38 659C14 651 -12 642 -33 629C-54 617 -74 601 -88 584C-101 567 -109 547 -115 528C-121 509 -122 489 -122 470C-122 451 -121 431 -116 412C-111 393 -104 372 -91 355C-78 338 -59 321 -37 309C-14 297 15 289 42 284C68 278 97 278 122 276C148 273 170 273 193 269C216 266 236 260 260 255C284 249 310 242 337 239C365 237 395 236 423 240C450 245 477 254 501 265C525 275 545 290 564 305C583 320 600 337 614 354C628 372 641 391 647 410C654 429 657 451 652 470Z%22/%3E%3Cpath vector-effect=%22non-scaling-stroke%22 d=%22M736 470C732 493 717 518 700 538C684 559 657 576 635 593C613 609 590 623 569 637C548 652 531 668 509 683C488 698 468 715 442 728C417 740 387 751 356 756C326 762 291 761 260 758C229 756 198 748 169 742C139 735 112 728 82 721C53 714 21 709 -9 699C-39 690 -72 679 -98 664C-123 649 -147 629 -164 609C-180 588 -188 564 -194 540C-200 517 -199 493 -199 470C-198 447 -195 423 -189 400C-182 378 -174 353 -158 333C-142 313 -120 292 -94 278C-67 264 -32 254 -1 248C31 241 65 241 95 238C125 235 152 234 179 229C207 225 231 217 260 211C289 205 321 195 353 193C386 190 423 189 455 195C487 200 520 211 548 225C576 238 600 255 623 273C645 291 666 311 684 331C701 352 718 374 727 397C736 421 741 447 736 470Z%22/%3E%3Cpath vector-effect=%22non-scaling-stroke%22 d=%22M799 470C794 497 779 524 762 548C744 572 717 592 694 612C671 632 647 649 624 668C602 686 583 706 558 724C534 743 510 765 479 780C449 795 412 808 376 815C339 821 297 820 260 817C223 813 186 803 151 794C116 786 84 775 51 765C17 755 -17 746 -49 734C-82 721 -117 708 -145 690C-173 672 -199 650 -217 626C-236 603 -246 576 -254 550C-262 524 -264 497 -265 470C-266 443 -265 416 -259 389C-253 363 -245 335 -228 310C-210 286 -185 262 -156 244C-126 227 -87 214 -50 205C-14 196 26 195 62 190C97 186 129 184 162 179C195 174 225 166 260 160C295 154 332 145 370 143C408 141 450 141 488 148C525 156 562 169 594 185C626 201 653 222 678 243C704 264 726 287 745 311C763 335 781 361 790 388C799 414 804 443 799 470Z%22/%3E%3Cpath vector-effect=%22non-scaling-stroke%22 d=%22M868 470C862 500 845 531 827 558C808 585 782 610 758 633C734 656 708 677 682 699C656 720 632 742 603 763C574 783 544 805 509 821C473 837 432 851 391 859C349 866 303 867 260 865C217 863 175 854 134 845C94 836 56 824 18 812C-20 800 -58 787 -93 771C-129 756 -166 739 -197 718C-228 697 -257 673 -279 647C-301 620 -318 591 -330 561C-341 532 -347 501 -349 470C-351 439 -349 407 -341 377C-332 346 -318 315 -296 288C-274 261 -243 235 -209 215C-175 196 -132 181 -92 170C-51 159 -7 155 32 149C72 142 109 139 147 134C185 128 221 121 260 115C299 110 341 102 384 101C427 99 474 100 517 107C560 114 604 127 642 144C680 161 716 183 746 207C776 230 802 258 822 286C842 314 859 345 866 376C874 407 875 440 868 470Z%22/%3E%3Cpath vector-effect=%22non-scaling-stroke%22 d=%22M-100 169C-83 173 -33 184 0 193C33 202 67 216 100 226C133 235 167 245 200 251C233 256 267 258 300 259C333 260 367 256 400 255C433 253 467 249 500 249C533 249 567 250 600 254C633 259 667 267 700 276C733 285 767 298 800 308C833 317 867 329 900 334C933 339 967 341 1000 338C1033 334 1067 325 1100 313C1133 301 1167 282 1200 266C1233 249 1267 228 1300 213C1333 198 1367 184 1400 176C1433 168 1467 165 1500 166C1533 167 1567 175 1600 183C1633 191 1683 209 1700 215%22/%3E%3Cpath vector-effect=%22non-scaling-stroke%22 d=%22M-100 208C-83 215 -33 235 0 249C33 264 67 283 100 296C133 310 167 323 200 331C233 339 267 342 300 343C333 344 367 339 400 335C433 332 467 324 500 320C533 316 567 312 600 312C633 311 667 313 700 317C733 320 767 327 800 331C833 335 867 341 900 342C933 343 967 341 1000 335C1033 329 1067 318 1100 306C1133 294 1167 276 1200 261C1233 246 1267 228 1300 217C1333 205 1367 196 1400 193C1433 190 1467 193 1500 200C1533 206 1567 220 1600 234C1633 248 1683 273 1700 281%22/%3E%3Cpath vector-effect=%22non-scaling-stroke%22 d=%22M-100 279C-83 288 -33 313 0 330C33 347 67 367 100 380C133 394 167 406 200 412C233 417 267 418 300 414C333 411 367 402 400 393C433 384 467 370 500 360C533 351 567 341 600 335C633 329 667 326 700 325C733 324 767 327 800 329C833 330 867 335 900 335C933 335 967 335 1000 331C1033 326 1067 318 1100 310C1133 301 1167 288 1200 278C1233 268 1267 256 1300 251C1333 245 1367 241 1400 244C1433 247 1467 255 1500 266C1533 278 1567 296 1600 312C1633 328 1683 356 1700 365%22/%3E%3Cpath vector-effect=%22non-scaling-stroke%22 d=%22M-100 363C-83 371 -33 396 0 411C33 425 67 442 100 451C133 461 167 468 200 468C233 469 267 463 300 454C333 445 367 430 400 415C433 401 467 382 500 368C533 354 567 340 600 332C633 324 667 319 700 318C733 317 767 321 800 324C833 328 867 335 900 339C933 343 967 347 1000 348C1033 349 1067 347 1100 344C1133 341 1167 334 1200 330C1233 325 1267 319 1300 318C1333 316 1367 317 1400 322C1433 328 1467 338 1500 350C1533 362 1567 380 1600 395C1633 409 1683 432 1700 440%22/%3E%3Cpath vector-effect=%22non-scaling-stroke%22 d=%22M-100 434C-83 440 -33 458 0 467C33 476 67 487 100 491C133 495 167 496 200 491C233 486 267 475 300 462C333 449 367 429 400 412C433 396 467 375 500 361C533 347 567 334 600 328C633 321 667 320 700 322C733 324 767 333 800 342C833 351 867 364 900 374C933 383 967 394 1000 400C1033 406 1067 410 1100 411C1133 413 1167 410 1200 408C1233 406 1267 402 1300 401C1333 401 1367 401 1400 405C1433 409 1467 416 1500 425C1533 433 1567 446 1600 456C1633 466 1683 480 1700 485%22/%3E%3C/g%3E%3C/svg%3E");
+}
+
+@media (prefers-color-scheme:dark){
+  :root{
+    --paper:#0A1620;
+    --fog:#122332;
+    --fog2:#1B3144;
+    --surface:#0F1D2A;
+    --ink:#EAF1F6;
+    --text:#D3E0EA;
+    --muted:#8FA6B8;
+    --line:rgba(234,241,246,.15);
+    --line2:rgba(234,241,246,.32);
+    --accent:#7EA6FF;
+    --accent2:#A5C0FF;
+    --signal:#FF7A45;
+    --panel:#0F2436;
+    --red:#FF6B6B;
+    --green:#5FD38A;
+    --shadow-lg:0 22px 60px -18px rgba(0,0,0,.75);
+  }
+}
+
+html{scroll-behavior:smooth;-webkit-text-size-adjust:100%}
+body{font-family:var(--font-display);color:var(--text);background:var(--paper);font-size:16px;line-height:1.55;-webkit-font-smoothing:antialiased}
+img{max-width:100%;display:block}
+a{color:inherit;text-decoration:none}
+button{font-family:var(--font-display);cursor:pointer;border:none;background:none;color:inherit}
+input,textarea,select{font-family:var(--font-display);color:var(--text);background:var(--surface)}
+::selection{background:var(--ink);color:var(--paper)}
+:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+
+/* category label: coloured square + name */
+.badge{display:inline-flex;align-items:center;gap:8px;font-size:13px;font-weight:600;color:var(--ink);align-self:flex-start}
+.badge::before,.card-category::before,.reader-category::before,.sqlabel::before{content:'';width:9px;height:9px;border-radius:2px;background:var(--cat,var(--ink));flex:none}
+.sqlabel{display:inline-flex;align-items:center;gap:9px}
+
+/* ============================================================
+   BUTTONS
+============================================================ */
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;padding:11px 20px;border-radius:999px;font-size:14px;font-weight:600;letter-spacing:-.005em;transition:background var(--tr),border-color var(--tr),color var(--tr),transform var(--tr)}
+.btn:active{transform:scale(.97)}
+.btn:disabled{opacity:.5;cursor:not-allowed}
+.btn-primary{background:var(--ink);color:var(--paper)}
+.btn-primary:hover{background:var(--accent);color:#fff}
+.btn-outline{background:transparent;color:var(--ink);border:1.5px solid var(--line2)}
+.btn-outline:hover{border-color:var(--ink);background:var(--fog)}
+.btn-outline:disabled:hover{background:transparent;border-color:var(--line2)}
+.btn-ghost{background:rgba(255,255,255,.12);color:#fff;border:1.5px solid rgba(255,255,255,.28)}
+.btn-ghost:hover{background:rgba(255,255,255,.22)}
+.btn-danger{background:var(--red);color:#fff}
+.btn-danger:hover{filter:brightness(.92)}
+.btn-sm{padding:7px 14px;font-size:13px}
+
+/* ============================================================
+   TOP BAR
+============================================================ */
+.topbar{background:var(--paper);color:var(--muted);font-size:13px;padding:7px 0;border-bottom:1px solid var(--line)}
+.topbar-inner{max-width:var(--wrap);margin:0 auto;padding:0 28px;display:flex;justify-content:space-between;align-items:center;gap:16px}
+.topbar-live{display:flex;align-items:center;gap:8px}
+.live-dot{width:8px;height:8px;border-radius:50%;background:var(--signal);animation:pulse 2.4s infinite}
+@keyframes pulse{0%,100%{opacity:1;transform:scale(1)}50%{opacity:.45;transform:scale(.8)}}
+.topbar-actions{display:flex;align-items:center;gap:18px}
+.topbar-actions>button{color:var(--ink);font-size:13px;font-weight:500;border-bottom:1px solid transparent;transition:border-color var(--tr)}
+.topbar-actions>button:hover{border-color:var(--ink)}
+
+/* ============================================================
+   HEADER + NAV
+============================================================ */
+.site-header{background:var(--paper);position:sticky;top:0;z-index:100;border-bottom:1px solid var(--line)}
+.header-top-line{display:none}
+.header-brand{max-width:var(--wrap);margin:0 auto;padding:0 28px;display:flex;align-items:center;justify-content:space-between;gap:20px;height:76px}
+.brand-left{display:flex;align-items:center;gap:13px;min-width:0}
+.brand-icon{width:38px;height:38px;flex:none}
+.brand-icon .b{fill:var(--ink)}
+.brand-icon .s{fill:var(--signal)}
+.brand-icon .a{fill:none;stroke:var(--paper);stroke-width:2.2;stroke-linecap:round}
+.brand-name{font-family:var(--font-display);font-size:32px;font-weight:800;color:var(--ink);letter-spacing:-.05em;line-height:1}
+.brand-name span{font-weight:400;letter-spacing:-.035em}
+.brand-tagline{font-size:12.5px;color:var(--muted);margin-top:4px;letter-spacing:0}
+.header-right{display:flex;align-items:center;gap:12px}
+.search-bar{display:flex;align-items:center;background:var(--fog);border:1.5px solid transparent;border-radius:999px;padding:9px 16px;gap:9px;color:var(--muted);transition:border-color var(--tr),background var(--tr)}
+.search-bar:focus-within{border-color:var(--ink);background:var(--surface)}
+.search-bar input{background:none;border:none;outline:none;color:var(--ink);font-size:14px;width:190px}
+.search-bar input::placeholder{color:var(--muted)}
+.search-clear{color:var(--muted);font-size:20px;line-height:1;padding:0 2px}
+.search-clear:hover{color:var(--ink)}
+
+.site-nav{border-top:none}
+.nav-inner{max-width:var(--wrap);margin:0 auto;padding:0 28px;display:flex;align-items:center;gap:28px;overflow-x:auto;scrollbar-width:none}
+.nav-inner::-webkit-scrollbar{display:none}
+.nav-item{flex-shrink:0;display:flex;align-items:center;gap:9px;padding:11px 0 12px;color:var(--muted);font-size:14.5px;font-weight:500;border-bottom:3px solid transparent;cursor:pointer;white-space:nowrap;transition:color var(--tr),border-color var(--tr)}
+.nav-item::before{content:'';width:9px;height:9px;border-radius:2px;background:var(--cat,var(--ink));flex:none}
+.nav-item:hover{color:var(--ink)}
+.nav-item.active{color:var(--ink);font-weight:700;border-bottom-color:var(--ink)}
+
+.admin-mode-banner{background:var(--signal);color:#1A0A00;text-align:center;font-size:13.5px;font-weight:600;padding:8px;display:none}
+.admin-mode-banner.visible{display:block}
+
+/* isobar artwork behind the homepage hero */
+main{position:relative}
+main::before,main::after{content:'';position:absolute;left:0;right:0;top:0;height:700px;pointer-events:none;z-index:0}
+main::before{background:var(--ink);opacity:.11;-webkit-mask:var(--iso) center/cover no-repeat;mask:var(--iso) center/cover no-repeat}
+main::after{background:linear-gradient(to bottom,transparent 45%,var(--paper) 100%)}
+main.reader-open::before,main.reader-open::after,
+main:has(#heroSection[style*="none"])::before,
+main:has(#heroSection[style*="none"])::after{display:none}
+main>*{position:relative;z-index:1}
+
+/* ============================================================
+   HERO
+============================================================ */
+.hero-section{max-width:var(--wrap);margin:0 auto;padding:40px 28px 0}
+.hero-grid{display:grid;grid-template-columns:minmax(0,1fr) 350px;column-gap:48px;align-items:start}
+.hero-grid:not(:has(.hero-side)){grid-template-columns:minmax(0,1fr)}
+.hero-main{grid-column:1;grid-row:1 / span 2;position:relative;min-height:560px;background:var(--fog2);cursor:pointer;overflow:hidden;border-radius:12px 12px 12px 0}
+.hero-main>img,.hero-main>.hero-placeholder{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;transition:transform .8s cubic-bezier(.2,.7,.2,1)}
+.hero-main:hover>img{transform:scale(1.035)}
+.hero-placeholder{background:var(--fog2)}
+.hero-placeholder::before{content:'';position:absolute;inset:0;background:var(--ink);opacity:.14;-webkit-mask:var(--iso) center/cover no-repeat;mask:var(--iso) center/cover no-repeat}
+.hero-main-content{position:absolute;left:0;bottom:0;width:min(84%,720px);padding:30px 44px 0 0;background:var(--paper);border-top-right-radius:30px}
+.hero-main-content .badge{margin-bottom:14px}
+.hero-main-content h2{font-family:var(--font-display);font-size:clamp(32px,3.9vw,58px);font-weight:800;line-height:1.0;letter-spacing:-.045em;color:var(--ink);margin-bottom:16px;text-wrap:balance}
+.hero-main:hover .hero-main-content h2{text-decoration:underline;text-decoration-thickness:3px;text-underline-offset:6px}
+.hero-main-content p{font-family:var(--font-read);color:var(--muted);font-size:18px;line-height:1.55;display:-webkit-box;-webkit-line-clamp:3;-webkit-box-orient:vertical;overflow:hidden}
+.hero-meta{display:flex;align-items:center;gap:10px;margin:16px 0 28px;color:var(--muted);font-size:14px}
+.hero-meta span:first-child{color:var(--ink);font-weight:600}
+
+.hero-side{grid-column:2;align-self:start;padding:18px 0 30px;display:flex;flex-direction:column;cursor:pointer;border-top:4px solid var(--cat,var(--ink))}
+.hero-side .badge{margin-bottom:12px}
+.hero-side h3{font-family:var(--font-display);font-size:28px;font-weight:700;line-height:1.06;letter-spacing:-.035em;color:var(--ink);margin-bottom:12px;text-wrap:balance}
+.hero-side:hover h3{text-decoration:underline;text-decoration-thickness:2px;text-underline-offset:5px}
+.hero-side p{font-family:var(--font-read);font-size:16px;line-height:1.5;color:var(--muted);display:-webkit-box;-webkit-line-clamp:3;-webkit-box-orient:vertical;overflow:hidden}
+.hero-side-meta{font-size:13.5px;color:var(--muted);margin-top:14px}
+.hero-side-meta>span:first-child{color:var(--ink);font-weight:600}
+
+.hero-section.intro .hero-main>img,.hero-section.intro .hero-main>.hero-placeholder{animation:heroReveal 1.1s cubic-bezier(.2,.7,.2,1) both}
+.hero-section.intro .hero-main-content{animation:panelIn .8s .35s cubic-bezier(.2,.7,.2,1) both}
+@keyframes heroReveal{from{clip-path:inset(0 0 100% 0);transform:scale(1.06)}to{clip-path:inset(0 0 0 0);transform:scale(1)}}
+@keyframes panelIn{from{transform:translateY(100%)}to{transform:translateY(0)}}
+
+/* ============================================================
+   LIST + CARDS
+============================================================ */
+.content-wrapper{max-width:var(--wrap);margin:0 auto;padding:72px 28px 100px;display:grid;grid-template-columns:minmax(0,1fr) 330px;gap:64px}
+.section-header{display:flex;align-items:baseline;justify-content:space-between;gap:16px;margin-bottom:36px;padding-bottom:16px;border-bottom:2px solid var(--ink)}
+.section-header h2{font-family:var(--font-display);font-size:clamp(32px,3.4vw,46px);font-weight:800;color:var(--ink);letter-spacing:-.045em;line-height:1}
+
+.articles-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(290px,1fr));gap:52px 34px}
+.article-card{display:flex;flex-direction:column;cursor:pointer;background:none}
+.card-image{aspect-ratio:3/2;border-radius:10px;overflow:hidden;position:relative;background:var(--fog2);margin-bottom:18px}
+.card-image img{width:100%;height:100%;object-fit:cover;transition:transform .6s cubic-bezier(.2,.7,.2,1)}
+.article-card:hover .card-image img{transform:scale(1.045)}
+.card-image-placeholder{position:relative;width:100%;height:100%;background:var(--fog2)}
+.card-image-placeholder::before{content:'';position:absolute;inset:0;background:var(--ink);opacity:.14;-webkit-mask:var(--iso) center/cover no-repeat;mask:var(--iso) center/cover no-repeat}
+.card-body{flex:1;display:flex;flex-direction:column}
+.card-category{display:flex;align-items:center;gap:9px;font-size:13px;font-weight:600;color:var(--ink);margin-bottom:10px}
+.card-title{font-family:var(--font-display);font-size:26px;font-weight:700;line-height:1.08;letter-spacing:-.035em;color:var(--ink);margin-bottom:12px;text-wrap:balance}
+.article-card:hover .card-title{text-decoration:underline;text-decoration-thickness:2px;text-underline-offset:5px}
+.card-excerpt{font-family:var(--font-read);font-size:16px;color:var(--muted);line-height:1.55;display:-webkit-box;-webkit-line-clamp:3;-webkit-box-orient:vertical;overflow:hidden;margin-bottom:16px}
+.card-footer{margin-top:auto;display:flex;align-items:center;justify-content:space-between;gap:10px;font-size:13.5px;color:var(--muted)}
+.card-author{display:flex;align-items:center;gap:9px;color:var(--ink);font-weight:600}
+.card-avatar{width:26px;height:26px;border-radius:50%;background:var(--cat,var(--ink));display:flex;align-items:center;justify-content:center;font-size:11px;color:#fff;font-weight:700}
+.card-admin-actions{display:flex;gap:8px;margin-top:16px;padding-top:14px;border-top:1px dashed var(--line2)}
+
+/* ============================================================
+   SIDEBAR
+============================================================ */
+.sidebar{display:flex;flex-direction:column;gap:44px}
+.sidebar-widget{border-top:2px solid var(--ink);padding-top:16px}
+.widget-title{font-family:var(--font-display);font-size:22px;font-weight:800;color:var(--ink);letter-spacing:-.035em;margin-bottom:10px}
+.trending-item{display:flex;gap:16px;align-items:flex-start;padding:15px 0;border-bottom:1px solid var(--line);cursor:pointer}
+.trending-item:last-child{border-bottom:none}
+.trending-num{font-size:15px;font-weight:700;color:var(--muted);min-width:24px;padding-top:3px;font-variant-numeric:tabular-nums}
+.trending-text h4{font-size:18px;font-weight:600;line-height:1.18;letter-spacing:-.02em;color:var(--ink);margin-bottom:6px}
+.trending-item:hover h4{text-decoration:underline;text-underline-offset:3px}
+.trending-text span{font-size:13.5px;color:var(--muted)}
+.sidebar-widget [onclick]:hover>.sqlabel,.sidebar-widget [onclick]:hover>span:first-child{color:var(--ink)}
+
+/* current-conditions readout */
+.weather-widget{position:relative;overflow:hidden;isolation:isolate;background:var(--panel);color:var(--panel-ink);padding:26px 26px 22px;border-radius:12px;border:1px solid rgba(234,241,246,.1)}
+.weather-widget::before{content:'';position:absolute;z-index:-1;right:-35%;top:-25%;width:150%;height:150%;background:#fff;opacity:.10;-webkit-mask:var(--iso) center/cover no-repeat;mask:var(--iso) center/cover no-repeat}
+.weather-widget-title{display:flex;align-items:center;gap:10px;font-size:14.5px;font-weight:500;color:rgba(234,241,246,.72);margin-bottom:22px}
+.wx-icon{font-size:24px;line-height:1}
+.weather-main-temp{font-size:96px;font-weight:300;line-height:.9;letter-spacing:-.06em;color:var(--panel-ink);font-variant-numeric:tabular-nums}
+.weather-main-temp sup{font-size:32px;font-weight:400;letter-spacing:0;vertical-align:top;position:relative;top:8px;margin-left:4px}
+.weather-main-desc{font-size:18px;font-weight:500;color:var(--panel-ink);margin:14px 0 24px}
+.weather-details{display:block}
+.weather-detail-item{display:flex;justify-content:space-between;align-items:baseline;gap:12px;padding:11px 0;border-top:1px solid rgba(234,241,246,.16);text-align:left}
+.weather-detail-label{font-size:14.5px;color:rgba(234,241,246,.7);margin:0}
+.weather-detail-value{font-size:18px;font-weight:600;color:var(--panel-ink);font-variant-numeric:tabular-nums}
+.weather-last-update{margin-top:14px;font-size:12.5px;color:rgba(234,241,246,.55);text-align:left}
+
+/* ============================================================
+   READER
+============================================================ */
+.reader-section{display:none;background:var(--paper);min-height:70vh;animation:readerIn .3s ease}
+.reader-section.open{display:block}
+@keyframes readerIn{from{opacity:0}to{opacity:1}}
+main.reader-open>#heroSection,
+main.reader-open>.content-wrapper{display:none}
+.reader-breadcrumb{border-bottom:1px solid var(--line)}
+.reader-breadcrumb-inner{max-width:var(--wrap);margin:0 auto;padding:15px 28px;display:flex;align-items:center;gap:12px;font-size:14px}
+.reader-breadcrumb button{color:var(--ink);font-size:14px;font-weight:600;border-bottom:1px solid transparent;transition:border-color var(--tr)}
+.reader-breadcrumb button:hover{border-color:var(--ink)}
+.reader-breadcrumb .crumb-sep{color:var(--line2)}
+.reader-breadcrumb .crumb-cat{color:var(--muted);font-weight:500}
+.reader-content{max-width:780px;margin:0 auto;padding:60px 28px 120px}
+.reader-category{display:inline-flex;align-items:center;gap:9px;font-size:14px;font-weight:600;color:var(--ink);margin-bottom:20px}
+.reader-title{font-family:var(--font-display);font-size:clamp(40px,6.4vw,76px);font-weight:800;line-height:.98;letter-spacing:-.05em;color:var(--ink);margin-bottom:28px;text-wrap:balance}
+.reader-meta{display:flex;flex-wrap:wrap;align-items:center;gap:6px 14px;font-size:15px;color:var(--muted);margin-bottom:44px;padding-bottom:26px;border-bottom:1px solid var(--line)}
+.reader-meta>span:first-child{color:var(--ink);font-weight:700}
+.reader-image{width:100%;max-height:640px;object-fit:cover;border-radius:12px;margin-bottom:48px}
+@media(min-width:1000px){.reader-image{width:calc(100% + 220px);max-width:none;margin-left:-110px}}
+.reader-body{font-family:var(--font-read);font-size:20px;line-height:1.75;color:var(--text);display:flow-root;font-optical-sizing:auto}
+.reader-body p{margin-bottom:1.35em}
+
+/* INLINE MEDIA */
+.media{margin-top:.35em;margin-bottom:1.1em}
+.media .frame{border-radius:10px;overflow:hidden;background:var(--fog2)}
+.media img{width:100%;height:auto;display:block}
+.media.video .frame{position:relative;aspect-ratio:16/9;background:#000}
+.media.video iframe{position:absolute;inset:0;width:100%;height:100%;border:0}
+.media figcaption{font-family:var(--font-display);font-size:13.5px;line-height:1.45;color:var(--muted);margin-top:9px}
+.media.size-small{width:28%}
+.media.size-medium{width:45%}
+.media.size-large{width:68%}
+.media.size-full{width:100%}
+.media.align-left{float:left;margin-right:1.6em}
+.media.align-right{float:right;margin-left:1.6em}
+.media.align-center{float:none;margin-left:auto;margin-right:auto;clear:both}
+.media.size-full{float:none;clear:both;margin-left:0;margin-right:0}
+.media.size-small.video{min-width:220px}
+
+/* GALLERY */
+.reader-gallery{margin-top:56px;padding-top:30px;border-top:2px solid var(--ink);clear:both}
+.reader-gallery-title{font-family:var(--font-display);font-size:26px;font-weight:800;letter-spacing:-.04em;color:var(--ink);margin-bottom:22px}
+.reader-gallery-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:18px}
+.reader-gallery-item{overflow:hidden;border-radius:10px;background:var(--fog2)}
+.reader-gallery-item img{width:100%;height:320px;object-fit:cover;transition:transform .5s cubic-bezier(.2,.7,.2,1)}
+.reader-gallery-item:hover img{transform:scale(1.03)}
+.reader-admin{display:flex;gap:10px;margin-top:40px;padding-top:22px;border-top:1px solid var(--line)}
+
+/* ============================================================
+   MODALS + FORMS
+============================================================ */
+.modal-overlay{position:fixed;inset:0;z-index:500;background:rgba(8,22,34,.55);-webkit-backdrop-filter:blur(8px);backdrop-filter:blur(8px);display:flex;align-items:flex-start;justify-content:center;padding:24px;overflow-y:auto;opacity:0;pointer-events:none;transition:opacity .2s ease}
+.modal-overlay.open{opacity:1;pointer-events:all}
+.modal{background:var(--surface);color:var(--text);border-radius:18px;width:100%;max-width:700px;box-shadow:var(--shadow-lg);margin:auto;transform:translateY(14px);transition:transform .25s cubic-bezier(.2,.7,.2,1);border:1px solid var(--line)}
+.modal.wide{max-width:820px}
+.modal-overlay.open .modal{transform:translateY(0)}
+.modal-header{padding:24px 30px 18px;border-bottom:1px solid var(--line);display:flex;align-items:center;justify-content:space-between;gap:12px}
+.modal-header h3{font-family:var(--font-display);font-size:26px;font-weight:800;letter-spacing:-.04em;color:var(--ink)}
+.modal-close{width:36px;height:36px;border-radius:50%;background:var(--fog);color:var(--ink);font-size:22px;line-height:1;display:flex;align-items:center;justify-content:center;transition:background var(--tr)}
+.modal-close:hover{background:var(--fog2)}
+.modal-body{padding:26px 30px}
+.modal-footer{padding:18px 30px 24px;border-top:1px solid var(--line);display:flex;justify-content:flex-end;gap:10px}
+.form-group{margin-bottom:20px}
+.form-group label{display:block;font-size:13.5px;font-weight:600;color:var(--ink);margin-bottom:7px}
+.form-group input,
+.form-group textarea,
+.form-group select{width:100%;padding:11px 14px;border:1.5px solid var(--line2);border-radius:10px;font-family:var(--font-display);font-size:15px;color:var(--text);background:var(--surface);transition:border-color var(--tr),box-shadow var(--tr)}
+.form-group input:focus,
+.form-group textarea:focus,
+.form-group select:focus{outline:none;border-color:var(--accent);box-shadow:0 0 0 4px color-mix(in srgb,var(--accent) 20%,transparent)}
+.form-group textarea{resize:vertical;min-height:120px;line-height:1.6}
+.form-row{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+.form-hint{font-size:13px;color:var(--muted);margin-top:7px;line-height:1.45}
+
+.editor-toolbar{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:8px;padding:8px;background:var(--fog);border:1.5px solid var(--line);border-radius:10px}
+.editor-preview{display:none;border:1.5px solid var(--line);border-radius:10px;padding:18px 20px;min-height:200px;max-height:460px;overflow-y:auto;background:var(--surface)}
+.editor-preview.reader-body{font-size:16px;line-height:1.7}
+.editor-preview .empty-note{color:var(--muted);font-size:14px}
+
+.settings-section{margin-bottom:30px}
+.settings-section h4{font-size:17px;font-weight:700;letter-spacing:-.02em;color:var(--ink);margin-bottom:16px;padding-bottom:10px;border-bottom:1.5px solid var(--ink)}
+.rubrika-list{display:flex;flex-direction:column;gap:8px}
+.rubrika-item{display:flex;align-items:center;justify-content:space-between;gap:10px;padding:10px 14px;background:var(--fog);border-radius:10px;font-size:14.5px;font-weight:500;cursor:grab;color:var(--ink)}
+.rubrika-item.dragging{opacity:.4}
+.rubrika-item.drag-over{outline:2px dashed var(--accent);outline-offset:-2px}
+.rubrika-handle{color:var(--muted);font-size:18px;line-height:1;user-select:none}
+.rubrika-name{flex:1}
+.rubrika-actions{display:flex;gap:6px}
+
+/* ============================================================
+   RICH TEXT EDITOR
+============================================================ */
+.rte{position:relative}
+.rte-toolbar{display:flex;flex-wrap:wrap;align-items:center;gap:4px;padding:8px;background:var(--fog);border:1.5px solid var(--line2);border-bottom:none;border-radius:12px 12px 0 0;position:sticky;top:0;z-index:6}
+.rte-sep{width:1px;height:22px;background:var(--line2);margin:0 5px}
+.rte-btn{position:relative;display:inline-flex;align-items:center;justify-content:center;min-width:34px;height:34px;padding:0 9px;border:1px solid transparent;border-radius:8px;background:none;color:var(--ink);font-size:14px;font-family:var(--font-display);cursor:pointer;transition:background var(--tr)}
+.rte-btn:hover{background:var(--fog2)}
+.rte-btn.active{background:var(--ink);color:var(--paper)}
+.rte-btn.txt{font-size:13px;font-weight:600}
+.rte-btn.media{background:var(--surface);border-color:var(--line2)}
+.rte-btn.media:hover{border-color:var(--ink)}
+.rte-btn svg{display:block}
+.rte-color input[type=color]{position:absolute;inset:0;width:100%;height:100%;opacity:0;cursor:pointer;padding:0;border:none}
+.form-group .rte-color input[type=color]{padding:0;border:none;width:100%}
+.rte-color .letter{font-weight:800;line-height:1;padding-bottom:2px;border-bottom:3px solid #1E3448}
+.form-group .rte-select{width:auto;padding:5px 8px;font-size:13px;border:1.5px solid var(--line2);border-radius:8px;background:var(--surface);color:var(--text);height:34px}
+.rte-mediabar{display:none;align-items:center;gap:8px;flex-wrap:wrap;padding:9px 12px;background:var(--fog2);border:1.5px solid var(--line2);border-bottom:none;font-size:13.5px;color:var(--text)}
+.rte-mediabar.show{display:flex}
+.rte-mediabar b{color:var(--ink)}
+.form-group .rte-media-input{width:200px;padding:5px 9px;font-size:13px;border:1.5px solid var(--line2);border-radius:8px;height:34px}
+.rte-wrap{position:relative}
+.rte-wrap.is-empty::before{content:attr(data-placeholder);position:absolute;top:18px;left:21px;color:var(--muted);font-family:var(--font-display);font-size:15px;pointer-events:none;z-index:1}
+.rte-editor{min-height:280px;max-height:560px;overflow-y:auto;border:1.5px solid var(--line2);border-radius:0 0 12px 12px;padding:18px 22px;background:var(--surface);outline:none;font-size:18px}
+.rte-editor:focus{border-color:var(--accent);box-shadow:0 0 0 4px color-mix(in srgb,var(--accent) 20%,transparent)}
+.rte-editor figure.media{cursor:pointer;user-select:none;-webkit-user-select:none}
+.rte-editor .media.video .frame::after{content:'';position:absolute;inset:0}
+.rte-editor .media.selected .frame{outline:3px solid var(--accent);outline-offset:2px}
+
+/* ARTICLE TEXT STYLES (reader + editor) */
+.reader-body h2{font-family:var(--font-display);font-size:1.75em;font-weight:800;line-height:1.08;letter-spacing:-.04em;color:var(--ink);margin:1.6em 0 .5em}
+.reader-body h3{font-family:var(--font-display);font-size:1.38em;font-weight:700;line-height:1.15;letter-spacing:-.03em;color:var(--ink);margin:1.5em 0 .45em}
+.reader-body h4{font-family:var(--font-display);font-size:1.12em;font-weight:700;line-height:1.25;letter-spacing:-.01em;color:var(--ink);margin:1.3em 0 .4em}
+.reader-body>h2:first-child,.reader-body>h3:first-child,.reader-body>h4:first-child{margin-top:0}
+.reader-body blockquote{border-left:5px solid var(--ink);margin:1.8em 0;padding:.1em 0 .1em 1.1em;font-family:var(--font-display);font-size:1.5em;font-weight:600;line-height:1.2;letter-spacing:-.025em;color:var(--ink)}
+.reader-body blockquote p{margin-bottom:.5em}
+.reader-body ul,.reader-body ol{margin:0 0 1.4em 1.5em}
+.reader-body li{margin-bottom:.4em}
+.reader-body a{color:var(--accent);text-decoration:underline;text-underline-offset:3px}
+.reader-body hr{border:none;border-top:2px solid var(--ink);margin:2.2em 0;clear:both}
+
+/* ============================================================
+   LIGHTBOX
+============================================================ */
+.reader-content img{cursor:zoom-in}
+.lightbox{position:fixed;inset:0;z-index:800;display:flex;align-items:center;justify-content:center;padding:24px;background:rgba(8,22,34,.55);-webkit-backdrop-filter:blur(14px);backdrop-filter:blur(14px);opacity:0;pointer-events:none;transition:opacity .22s ease;cursor:zoom-out}
+.lightbox.open{opacity:1;pointer-events:all}
+.lb-stage{display:flex;flex-direction:column;align-items:center;gap:12px;max-width:100%;transform:scale(.96);transition:transform .22s ease}
+.lightbox.open .lb-stage{transform:scale(1)}
+.lb-stage img{max-width:min(94vw,1600px);max-height:82vh;width:auto;height:auto;border-radius:10px;box-shadow:0 24px 80px rgba(0,0,0,.5);background:#fff;cursor:zoom-out}
+.lb-cap{max-width:min(94vw,900px);color:rgba(255,255,255,.9);font-size:14.5px;text-align:center;line-height:1.45;min-height:1px}
+.lb-close,.lb-nav{position:absolute;width:46px;height:46px;border-radius:50%;background:rgba(255,255,255,.16);color:#fff;font-size:26px;line-height:1;display:flex;align-items:center;justify-content:center;border:1px solid rgba(255,255,255,.28);transition:background var(--tr);cursor:pointer}
+.lb-close:hover,.lb-nav:hover{background:rgba(255,255,255,.3)}
+.lb-close{top:18px;right:18px}
+.lb-nav{top:50%;transform:translateY(-50%)}
+.lb-prev{left:18px}
+.lb-next{right:18px}
+.lb-nav.hide{display:none}
+
+mark{background:color-mix(in srgb,var(--signal) 30%,transparent);color:inherit;padding:0 2px;border-radius:3px}
+
+/* ============================================================
+   LANGUAGE
+============================================================ */
+.lang-switch{position:relative}
+.lang-btn{color:var(--ink);font-size:13px;font-weight:500;display:inline-flex;align-items:center;gap:7px;border:1.5px solid var(--line2);border-radius:999px;padding:3px 13px;transition:border-color var(--tr),background var(--tr)}
+.lang-btn:hover{border-color:var(--ink);background:var(--fog)}
+.lang-menu{position:fixed;z-index:700;display:none;width:min(460px,calc(100vw - 24px));max-height:min(72vh,560px);overflow-y:auto;background:var(--surface);border-radius:16px;box-shadow:var(--shadow-lg);border:1px solid var(--line);padding:12px;color:var(--text)}
+.lang-menu.open{display:block}
+.lang-menu .lm-title{font-size:13px;font-weight:600;color:var(--muted);padding:4px 10px 10px}
+.lang-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:3px}
+.lang-item{display:flex;justify-content:space-between;align-items:center;gap:8px;text-align:left;padding:9px 12px;border-radius:9px;font-size:14.5px;font-weight:500;color:var(--ink);transition:background var(--tr)}
+.lang-item small{font-size:11.5px;color:var(--muted);text-transform:uppercase;letter-spacing:.04em}
+.lang-item:hover{background:var(--fog)}
+.lang-item.active{background:var(--ink);color:var(--paper)}
+.lang-item.active small{color:inherit;opacity:.7}
+.lt-progress{position:fixed;top:0;left:0;height:3px;width:0;background:var(--signal);z-index:9500;opacity:0;pointer-events:none}
+.lt-progress.on{opacity:1;width:75%;transition:width 6s cubic-bezier(.1,.7,.2,1)}
+.lt-progress.done{opacity:0;width:100%;transition:width .2s ease,opacity .5s ease .2s}
+
+/* ============================================================
+   TOAST, EMPTY, FOOTER
+============================================================ */
+.toast-container{position:fixed;bottom:24px;right:24px;z-index:9000;display:flex;flex-direction:column;gap:10px;pointer-events:none}
+.toast{background:#0C2233;color:#EAF1F6;padding:13px 20px;border-radius:12px;font-size:14.5px;font-weight:500;box-shadow:var(--shadow-lg);border:1px solid rgba(234,241,246,.14);display:flex;align-items:center;gap:11px;transform:translateX(120%);transition:transform .28s cubic-bezier(.2,.7,.2,1);pointer-events:all}
+.toast.show{transform:translateX(0)}
+.toast.success::before{content:'✓';color:#6FE3A0;font-weight:700}
+.toast.error::before{content:'✕';color:#FF8D6B;font-weight:700}
+
+.empty-state{text-align:left;padding:48px 0;color:var(--muted);grid-column:1/-1;max-width:520px}
+.empty-state .ei{font-size:36px;margin-bottom:14px;opacity:.55}
+.empty-state h3{font-family:var(--font-display);font-size:28px;font-weight:800;letter-spacing:-.04em;color:var(--ink);margin-bottom:8px}
+.empty-state p{font-size:16px;margin-bottom:22px}
+
+.site-footer{position:relative;overflow:hidden;isolation:isolate;background:var(--panel);color:rgba(234,241,246,.72);padding:84px 28px 60px;text-align:left}
+.site-footer::before{content:'';position:absolute;z-index:-1;inset:0;background:#fff;opacity:.09;-webkit-mask:var(--iso) center/cover no-repeat;mask:var(--iso) center/cover no-repeat}
+.footer-inner{max-width:var(--wrap);margin:0 auto}
+.footer-logo{font-family:var(--font-display);font-size:clamp(56px,11.5vw,168px);font-weight:800;line-height:.88;letter-spacing:-.065em;color:var(--panel-ink);margin-bottom:34px}
+.footer-logo span{font-weight:400;letter-spacing:-.05em}
+.footer-text{font-size:14.5px}
+
+@keyframes spin{to{transform:rotate(360deg)}}
+
+/* ============================================================
+   RESPONSIVE
+============================================================ */
+@media(max-width:1100px){
+  .content-wrapper{gap:44px;grid-template-columns:minmax(0,1fr) 300px}
+  .hero-grid{grid-template-columns:minmax(0,1fr) 300px;column-gap:32px}
+}
+
+@media(max-width:900px){
+  .hero-section{padding:24px 20px 0}
+  .hero-grid{grid-template-columns:1fr}
+  .hero-side{display:none}
+  .hero-main{min-height:0;display:flex;flex-direction:column;background:none;overflow:visible;border-radius:0}
+  .hero-main>img,.hero-main>.hero-placeholder{position:relative;inset:auto;height:auto;aspect-ratio:4/3;border-radius:12px}
+  .hero-main-content{position:static;width:100%;padding:20px 0 0;border-radius:0;background:none}
+  .hero-main-content h2{font-size:clamp(30px,8vw,44px)}
+  .hero-meta{margin-bottom:0}
+  .content-wrapper{grid-template-columns:1fr;padding:48px 20px 70px}
+  .sidebar{display:none}
+  .form-row{grid-template-columns:1fr}
+  .search-bar{padding:8px 13px}
+  .search-bar input{width:130px}
+  .header-brand,.nav-inner,.topbar-inner,.reader-breadcrumb-inner{padding-left:20px;padding-right:20px}
+  .brand-name{font-size:27px}
+}
+
+@media(max-width:600px){
+  .header-brand{height:64px}
+  .brand-tagline{display:none}
+  .brand-icon{width:32px;height:32px}
+  .header-right{gap:8px}
+  .search-bar input{width:84px}
+  .nav-inner{gap:22px}
+  .topbar-live>span:nth-of-type(n+2){display:none}
+  .topbar-inner{gap:8px}
+  .topbar,.topbar-actions>button{font-size:12px}
+  .topbar-live,.topbar-actions>button,.lang-btn{white-space:nowrap}
+  .topbar-actions{gap:10px}
+  main::before,main::after{height:420px}
+  main::before{opacity:.07}
+  .articles-grid{grid-template-columns:1fr;gap:44px}
+  .modal-overlay{padding:0;align-items:flex-end}
+  .modal{border-radius:18px 18px 0 0;border-bottom:none}
+  .modal-header,.modal-body,.modal-footer{padding-left:20px;padding-right:20px}
+  .reader-content{padding:40px 20px 80px}
+  .reader-gallery-grid{grid-template-columns:1fr}
+  .reader-gallery-item img{height:280px}
+  .site-footer{padding:56px 20px 44px}
+  .lightbox{padding:12px}
+  .lb-nav{width:40px;height:40px;font-size:22px}
+  .lb-prev{left:8px}
+  .lb-next{right:8px}
+  .lb-close{top:10px;right:10px}
+  /* on phones, floated media goes full width so text never gets squeezed */
+  .media,.media.size-small,.media.size-medium,.media.size-large{float:none!important;width:100%!important;min-width:0!important;margin-left:0!important;margin-right:0!important}
+}
+
+@media (prefers-reduced-motion:reduce){
+  html{scroll-behavior:auto}
+  *,*::before,*::after{animation:none!important;transition-duration:.01ms!important}
+}
+
+</style>
+</head>
+
+<body>
+
+<div class="toast-container" id="toastContainer" translate="no"></div>
+
+<div class="lt-progress" id="ltProgress"></div>
+<div class="lang-menu notranslate" id="langMenu" translate="no"></div>
+
+<div class="admin-mode-banner" id="adminBanner">
+  ⛅ Editor mode — you are logged in as administrator
+</div>
+
+<div class="topbar">
+  <div class="topbar-inner">
+    <div class="topbar-live">
+      <div class="live-dot"></div>
+      <span id="currentDate" translate="no"></span>
+      <span style="opacity:.5">·</span>
+      <span>Slovenia</span>
+    </div>
+    <div class="topbar-actions">
+      <div class="lang-switch notranslate" translate="no">
+        <button type="button" class="lang-btn" id="langBtn" onclick="toggleLangMenu(event)" aria-haspopup="true" title="Language">🌐 <span id="langBtnLabel">English</span> ▾</button>
+      </div>
+      <button id="btnAdminToggle">Editor access</button>
+      <button id="btnSettings" style="display:none">⚙ Settings</button>
+    </div>
+  </div>
+</div>
+
+<header class="site-header">
+  <div class="header-top-line"></div>
+
+  <div class="header-brand">
+    <div class="brand-left">
+      <svg class="brand-icon" viewBox="0 0 40 40" aria-hidden="true"><circle class="b" cx="20" cy="20" r="19.5"/><circle class="s" cx="27" cy="13.5" r="6"/><path class="a" d="M5 26 Q14 17 24 25 T36 23"/><path class="a" style="opacity:.55" d="M5 32 Q14 23 24 31 T36 29"/></svg>
+      <div class="brand-text">
+        <div class="brand-name" id="brandName" translate="no" style="cursor:pointer" onclick="closeReader();filterCategory('all',null)">
+          Biometeo<span>news</span>
+        </div>
+        <div class="brand-tagline">Weather · Climate · Nature · Science</div>
+      </div>
+    </div>
+
+    <div class="header-right">
+      <div class="search-bar">
+        <svg width="14" height="14" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+          <circle cx="11" cy="11" r="8"/>
+          <path d="m21 21-4.35-4.35"/>
+        </svg>
+        <input type="text" id="searchInput" placeholder="Search…">
+        <button type="button" class="search-clear" id="searchClear" onclick="clearSearchBox(true)" title="Clear search" style="display:none">×</button>
+      </div>
+      <button class="btn btn-primary" id="btnNewArticle" style="display:none">+ New article</button>
+    </div>
+  </div>
+
+  <nav class="site-nav">
+    <div class="nav-inner" id="navInner">
+      <div class="nav-item active" data-cat="all" onclick="filterCategory('all',this)">All news</div>
+    </div>
+  </nav>
+</header>
+
+<main>
+
+  <section class="hero-section" id="heroSection"></section>
+
+  <div class="content-wrapper">
+    <div>
+      <div class="section-header">
+        <h2 id="sectionTitle">Latest</h2>
+        <button class="btn btn-outline btn-sm" onclick="refreshArticles()" id="btnRefresh">↺ Refresh</button>
+      </div>
+
+      <div class="articles-grid" id="articlesGrid">
+        <div class="empty-state">
+          <div class="ei">🌦</div>
+          <p>Loading…</p>
+        </div>
+      </div>
+    </div>
+
+    <aside class="sidebar" id="sidebar"></aside>
+  </div>
+
+  <section class="reader-section" id="readerSection">
+    <div class="reader-breadcrumb">
+      <div class="reader-breadcrumb-inner">
+        <button onclick="closeReader()">← Back to homepage</button>
+        <span class="crumb-sep">›</span>
+        <span class="crumb-cat" id="readerCrumbCat"></span>
+      </div>
+    </div>
+    <div class="reader-content" id="readerContent"></div>
+  </section>
+
+</main>
+
+<footer class="site-footer">
+  <div class="footer-inner">
+    <div class="footer-logo" translate="no">Biometeo<span>news</span></div>
+    <div class="footer-text">
+      Weather · Climate · Nature · Science
+      &nbsp;·&nbsp;
+      &copy; <span id="footerYear"></span>
+    </div>
+  </div>
+</footer>
+
+<!-- LIGHTBOX -->
+<div class="lightbox" id="lightbox" onclick="closeLightbox()">
+  <button class="lb-close" onclick="closeLightbox()" title="Close (Esc)">×</button>
+  <button class="lb-nav lb-prev" id="lbPrev" onclick="event.stopPropagation();stepLightbox(-1)" title="Previous">‹</button>
+  <div class="lb-stage">
+    <img id="lbImg" alt="">
+    <div class="lb-cap" id="lbCap"></div>
+  </div>
+  <button class="lb-nav lb-next" id="lbNext" onclick="event.stopPropagation();stepLightbox(1)" title="Next">›</button>
+</div>
+
+<!-- EDITOR -->
+<div class="modal-overlay" id="editorModal" translate="no">
+  <div class="modal wide">
+
+    <div class="modal-header">
+      <h3 id="editorTitle">New article</h3>
+      <button class="modal-close" onclick="closeModal('editorModal')">×</button>
+    </div>
+
+    <div class="modal-body">
+
+      <input type="hidden" id="editingId">
+
+      <div class="form-row">
+        <div class="form-group">
+          <label>Category *</label>
+          <select id="articleCategory"></select>
+        </div>
+        <div class="form-group">
+          <label>Author</label>
+          <input type="text" id="articleAuthor" placeholder="First Last">
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label>Article language</label>
+        <select id="articleLang"></select>
+        <div class="form-hint">The language this article is written in. Visitors who pick another language see an automatic translation. “Auto-detect” works too, but is a little slower.</div>
+      </div>
+
+      <div class="form-group">
+        <label>Title *</label>
+        <input type="text" id="articleTitle" placeholder="Article title…">
+      </div>
+
+      <div class="form-group">
+        <label>Short summary</label>
+        <textarea id="articleExcerpt" rows="2" placeholder="Short intro…"></textarea>
+      </div>
+
+      <div class="form-group">
+        <label>Content *</label>
+
+        <div class="rte">
+
+          <div class="rte-toolbar" id="rteToolbar" onmousedown="if(!['SELECT','INPUT'].includes(event.target.tagName))event.preventDefault()">
+
+            <button type="button" class="rte-btn" title="Undo (Ctrl+Z)" onclick="rteCmd('undo')">↶</button>
+            <button type="button" class="rte-btn" title="Redo (Ctrl+Y)" onclick="rteCmd('redo')">↷</button>
+
+            <span class="rte-sep"></span>
+
+            <select class="rte-select" id="rteBlock" title="Text style" onchange="rteBlock(this.value)">
+              <option value="p">Normal text</option>
+              <option value="h2">Heading 1</option>
+              <option value="h3">Heading 2</option>
+              <option value="h4">Heading 3</option>
+              <option value="blockquote">Quote</option>
+            </select>
+
+            <select class="rte-select" id="rteSize" title="Font size (select text first)" onchange="rteSizeSelect(this.value)">
+              <option value="">Size</option>
+              <option value="12">12</option>
+              <option value="14">14</option>
+              <option value="16">16</option>
+              <option value="18">18 (normal)</option>
+              <option value="20">20</option>
+              <option value="24">24</option>
+              <option value="28">28</option>
+              <option value="32">32</option>
+              <option value="40">40</option>
+              <option value="48">48</option>
+            </select>
+
+            <button type="button" class="rte-btn txt" title="Smaller text" onclick="stepFontSize(-1)">A−</button>
+            <button type="button" class="rte-btn txt" title="Larger text" onclick="stepFontSize(1)">A+</button>
+
+            <span class="rte-sep"></span>
+
+            <button type="button" class="rte-btn" id="rteBold" title="Bold (Ctrl+B)" onclick="rteCmd('bold')"><b>B</b></button>
+            <button type="button" class="rte-btn" id="rteItalic" title="Italic (Ctrl+I)" onclick="rteCmd('italic')"><i style="font-family:Georgia,serif">I</i></button>
+            <button type="button" class="rte-btn" id="rteUnderline" title="Underline (Ctrl+U)" onclick="rteCmd('underline')"><u>U</u></button>
+            <button type="button" class="rte-btn" id="rteStrike" title="Strikethrough" onclick="rteCmd('strikeThrough')"><s>S</s></button>
+
+            <label class="rte-btn rte-color" title="Text color">
+              <span class="letter" id="rteColorLetter">A</span>
+              <input type="color" id="rteColor" value="#1E3448" onchange="rteColor('foreColor',this.value)">
+            </label>
+            <label class="rte-btn rte-color" title="Highlight color">
+              <span class="letter" id="rteHiliteLetter" style="background:#FFF59D;padding:0 4px;border-bottom-color:#F4A826">ab</span>
+              <input type="color" id="rteHilite" value="#FFF59D" onchange="rteColor('hiliteColor',this.value)">
+            </label>
+
+            <span class="rte-sep"></span>
+
+            <button type="button" class="rte-btn" id="rteLeft" title="Align left" onclick="rteCmd('justifyLeft',null,true)"><svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"><path d="M2 3h12M2 6.5h8M2 10h12M2 13.5h8"/></svg></button>
+            <button type="button" class="rte-btn" id="rteCenter" title="Center" onclick="rteCmd('justifyCenter',null,true)"><svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"><path d="M2 3h12M4 6.5h8M2 10h12M4 13.5h8"/></svg></button>
+            <button type="button" class="rte-btn" id="rteRight" title="Align right" onclick="rteCmd('justifyRight',null,true)"><svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"><path d="M2 3h12M6 6.5h8M2 10h12M6 13.5h8"/></svg></button>
+            <button type="button" class="rte-btn" id="rteJustify" title="Justify" onclick="rteCmd('justifyFull',null,true)"><svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"><path d="M2 3h12M2 6.5h12M2 10h12M2 13.5h12"/></svg></button>
+
+            <span class="rte-sep"></span>
+
+            <button type="button" class="rte-btn" id="rteUL" title="Bullet list" onclick="rteCmd('insertUnorderedList')"><svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"><path d="M6 4h8M6 8h8M6 12h8"/><circle cx="2.5" cy="4" r="1" fill="currentColor" stroke="none"/><circle cx="2.5" cy="8" r="1" fill="currentColor" stroke="none"/><circle cx="2.5" cy="12" r="1" fill="currentColor" stroke="none"/></svg></button>
+            <button type="button" class="rte-btn" id="rteOL" title="Numbered list" onclick="rteCmd('insertOrderedList')"><svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"><path d="M7 4h7M7 8h7M7 12h7"/><text x="1" y="5.5" font-size="5" fill="currentColor" stroke="none">1</text><text x="1" y="9.5" font-size="5" fill="currentColor" stroke="none">2</text><text x="1" y="13.5" font-size="5" fill="currentColor" stroke="none">3</text></svg></button>
+
+            <span class="rte-sep"></span>
+
+            <button type="button" class="rte-btn txt" title="Insert / edit link" onclick="openLinkModal()">🔗 Link</button>
+            <button type="button" class="rte-btn txt" title="Remove link" onclick="rteCmd('unlink')">Unlink</button>
+            <button type="button" class="rte-btn txt" title="Horizontal line" onclick="rteCmd('insertHorizontalRule')">―</button>
+            <button type="button" class="rte-btn txt" title="Clear formatting" onclick="rteClear()">Clear</button>
+
+            <span class="rte-sep"></span>
+
+            <button type="button" class="rte-btn txt media" onclick="openInsertModal('image')">🖼 Image</button>
+            <button type="button" class="rte-btn txt media" onclick="openInsertModal('video')">▶ YouTube</button>
+
+          </div>
+
+          <div class="rte-mediabar" id="rteMediaBar">
+            <b id="mbKind">Image</b>
+            <select class="rte-select" id="mbSize" title="Size" onchange="setMediaSize(this.value)">
+              <option value="small">Small</option>
+              <option value="medium">Medium</option>
+              <option value="large">Large</option>
+              <option value="full">Full width</option>
+            </select>
+            <select class="rte-select" id="mbAlign" title="Position" onchange="setMediaAlign(this.value)">
+              <option value="left">Left (text wraps right)</option>
+              <option value="right">Right (text wraps left)</option>
+              <option value="center">Centered</option>
+            </select>
+            <input type="text" class="rte-media-input" id="mbCaption" placeholder="Caption…" oninput="setMediaCaption(this.value)">
+            <button type="button" class="btn btn-outline btn-sm" onclick="moveMedia(-1)" title="Move up">▲</button>
+            <button type="button" class="btn btn-outline btn-sm" onclick="moveMedia(1)" title="Move down">▼</button>
+            <button type="button" class="btn btn-danger btn-sm" onclick="removeMedia()">✕ Remove</button>
+          </div>
+
+          <div class="rte-wrap is-empty" id="rteWrap" data-placeholder="Write your article here…">
+            <div class="rte-editor reader-body" id="articleContent" contenteditable="true" spellcheck="true"></div>
+          </div>
+
+        </div>
+
+        <div class="form-hint">
+          Select text to format it (bold, italic, size, color, headings…). Click an image or video in the text
+          to change its size, position or caption — left/right media lets the text wrap around it.
+          To add media, put the cursor in the paragraph where it should appear and use “Image” or “YouTube”.
+        </div>
+      </div>
+
+      <!-- MAIN PHOTO -->
+      <div class="form-group">
+        <label>Main photo</label>
+        <input type="url" id="articleImage" placeholder="https://…">
+        <div class="form-hint">Photo shown at the top of the article. Recommended: 1200 × 630 px.</div>
+      </div>
+
+      <!-- EXTRA PHOTOS -->
+      <div class="form-group">
+        <label>Additional photos (gallery)</label>
+        <div id="articleImages" style="display:flex;flex-direction:column;gap:10px"></div>
+        <button type="button" class="btn btn-outline btn-sm" onclick="addArticleImageField()" style="margin-top:10px">+ Add photo</button>
+        <div class="form-hint">These photos are shown in a gallery at the end of the article.</div>
+      </div>
+
+    </div>
+
+    <div class="modal-footer">
+      <button class="btn btn-outline" onclick="closeModal('editorModal')">Cancel</button>
+      <button class="btn btn-primary" id="btnSaveArticle" onclick="saveArticle()">Publish article</button>
+    </div>
+
+  </div>
+</div>
+
+<!-- INSERT MEDIA -->
+<div class="modal-overlay" id="insertModal" translate="no">
+  <div class="modal" style="max-width:480px">
+
+    <div class="modal-header">
+      <h3 id="insertTitle">Insert image</h3>
+      <button class="modal-close" onclick="closeModal('insertModal')">×</button>
+    </div>
+
+    <div class="modal-body">
+      <input type="hidden" id="insertType">
+
+      <div class="form-group">
+        <label id="insertUrlLabel">Image URL *</label>
+        <input type="url" id="insertUrl" placeholder="https://…" onkeydown="if(event.key==='Enter')confirmInsert()">
+        <div class="form-hint" id="insertUrlHint"></div>
+      </div>
+
+      <div class="form-row">
+        <div class="form-group">
+          <label>Size</label>
+          <select id="insertSize">
+            <option value="small">Small (¼ width)</option>
+            <option value="medium">Medium (½ width)</option>
+            <option value="large">Large (⅔ width)</option>
+            <option value="full">Full width</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label>Position</label>
+          <select id="insertAlign">
+            <option value="left">Left — text wraps on the right</option>
+            <option value="right">Right — text wraps on the left</option>
+            <option value="center">Centered — no wrapping</option>
+          </select>
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label>Caption (optional)</label>
+        <input type="text" id="insertCaption" placeholder="e.g. Storm clouds over Ljubljana — Photo: Name" onkeydown="if(event.key==='Enter')confirmInsert()">
+      </div>
+    </div>
+
+    <div class="modal-footer">
+      <button class="btn btn-outline" onclick="closeModal('insertModal')">Cancel</button>
+      <button class="btn btn-primary" onclick="confirmInsert()">Insert</button>
+    </div>
+
+  </div>
+</div>
+
+<!-- LINK -->
+<div class="modal-overlay" id="linkModal" translate="no">
+  <div class="modal" style="max-width:440px">
+
+    <div class="modal-header">
+      <h3>Insert link</h3>
+      <button class="modal-close" onclick="closeModal('linkModal')">×</button>
+    </div>
+
+    <div class="modal-body">
+      <div class="form-group">
+        <label>Link URL</label>
+        <input type="text" id="linkUrl" placeholder="https://…" onkeydown="if(event.key==='Enter')applyLink()">
+        <div class="form-hint">Select text in the article first to turn it into a link.</div>
+      </div>
+    </div>
+
+    <div class="modal-footer">
+      <button class="btn btn-outline" onclick="closeModal('linkModal')">Cancel</button>
+      <button class="btn btn-primary" onclick="applyLink()">Apply</button>
+    </div>
+
+  </div>
+</div>
+
+<!-- SETTINGS -->
+<div class="modal-overlay" id="settingsModal" translate="no">
+  <div class="modal">
+
+    <div class="modal-header">
+      <h3>Editorial settings</h3>
+      <button class="modal-close" onclick="closeModal('settingsModal')">×</button>
+    </div>
+
+    <div class="modal-body">
+
+      <div class="settings-section">
+        <h4>GitHub integration</h4>
+
+        <div class="form-group">
+          <label>GitHub token</label>
+          <input type="password" id="ghToken" placeholder="ghp_…">
+        </div>
+
+        <div class="form-row">
+          <div class="form-group">
+            <label>Repository owner</label>
+            <input type="text" id="ghOwner" placeholder="username">
+          </div>
+          <div class="form-group">
+            <label>Repository name</label>
+            <input type="text" id="ghRepo" placeholder="biometeonews">
+          </div>
+        </div>
+
+        <div class="form-row">
+          <div class="form-group">
+            <label>Branch</label>
+            <input type="text" id="ghBranch" placeholder="main">
+          </div>
+          <div class="form-group">
+            <label>Path to articles.json</label>
+            <input type="text" id="ghFilePath" placeholder="articles.json">
+          </div>
+        </div>
+
+        <div style="display:flex;gap:8px;flex-wrap:wrap">
+          <button class="btn btn-primary btn-sm" onclick="saveSettings()">Save</button>
+          <button class="btn btn-outline btn-sm" onclick="testConnection()">Test connection</button>
+        </div>
+      </div>
+
+      <div class="settings-section">
+        <h4>Translation (optional)</h4>
+        <div class="form-group">
+          <label>Google Cloud Translation API key</label>
+          <input type="text" id="translateKey" placeholder="AIza…">
+          <div class="form-hint">Leave empty to use the free automatic translation. With a key, translation is more reliable. Restrict the key to your website address in Google Cloud Console — it is published together with the articles so visitors' browsers can use it.</div>
+        </div>
+      </div>
+
+      <div class="settings-section">
+        <h4>Categories</h4>
+        <div class="rubrika-list" id="rubrikaList"></div>
+        <div style="display:flex;gap:8px;margin-top:12px">
+          <input type="text" id="newRubrikaInput" placeholder="Category name…" style="flex:1;padding:9px 12px;border:1.5px solid var(--border);border-radius:var(--radius);font-size:14px">
+          <button class="btn btn-primary btn-sm" onclick="addRubrika()">Add</button>
+        </div>
+      </div>
+
+      <div class="settings-section">
+        <h4>Editorial password</h4>
+        <div class="form-group">
+          <label>New password</label>
+          <input type="password" id="newAdminPass" placeholder="••••••••">
+        </div>
+        <button class="btn btn-outline btn-sm" onclick="changePassword()">Change password</button>
+      </div>
+
+    </div>
+
+    <div class="modal-footer">
+      <button class="btn btn-outline" onclick="closeModal('settingsModal')">Close</button>
+    </div>
+
+  </div>
+</div>
+
+<!-- LOGIN -->
+<div class="modal-overlay" id="loginModal" translate="no">
+  <div class="modal" style="max-width:380px">
+
+    <div class="modal-header">
+      <h3>Editor access</h3>
+      <button class="modal-close" onclick="closeModal('loginModal')">×</button>
+    </div>
+
+    <div class="modal-body">
+      <div style="text-align:center;font-size:40px;margin-bottom:16px">🌦</div>
+      <div class="form-group">
+        <label>Password</label>
+        <input type="password" id="adminPassword" placeholder="••••••••" onkeydown="if(event.key==='Enter')checkAdminLogin()">
+      </div>
+    </div>
+
+    <div class="modal-footer">
+      <button class="btn btn-outline" onclick="closeModal('loginModal')">Cancel</button>
+      <button class="btn btn-primary" onclick="checkAdminLogin()">Log in</button>
+    </div>
+
+  </div>
+</div>
+
+<!-- DELETE -->
+<div class="modal-overlay" id="confirmModal" translate="no">
+  <div class="modal" style="max-width:420px">
+
+    <div class="modal-header">
+      <h3>Confirm deletion</h3>
+      <button class="modal-close" onclick="closeModal('confirmModal')">×</button>
+    </div>
+
+    <div class="modal-body">
+      <p style="font-size:15px">Are you sure you want to delete this article? This action cannot be undone.</p>
+    </div>
+
+    <div class="modal-footer">
+      <button class="btn btn-outline" onclick="closeModal('confirmModal')">Cancel</button>
+      <button class="btn btn-danger" id="btnConfirmDelete">Delete</button>
+    </div>
+
+  </div>
+</div>
+
+<script>
+
+/* ============================================================
+   MAIN STATE
+============================================================ */
+
+let STATE={
+  articles:[],
+  categories:[
+    'Weather in Slovenia',
+    'Forecasts',
+    'Climate Change',
+    'Extreme Events',
+    'Astronomy',
+    'Nature & Environment',
+    'Meteorological Science'
+  ],
+  settings:{
+    ghToken:'',
+    ghOwner:'',
+    ghRepo:'',
+    ghBranch:'main',
+    ghFilePath:'articles.json',
+    adminPass:'urednik2024'
+  },
+  isAdmin:false,
+  currentCategory:'all',
+  weather:[]
+};
+
+
+/* ============================================================
+   CATEGORY MIGRATION (old Slovenian names -> English)
+============================================================ */
+
+const CAT_MAP={
+  'Vreme v Sloveniji':'Weather in Slovenia',
+  'Napovedi':'Forecasts',
+  'Podnebne spremembe':'Climate Change',
+  'Ekstremni pojavi':'Extreme Events',
+  'Astronomija':'Astronomy',
+  'Narava & Okolje':'Nature & Environment',
+  'Meteorološka znanost':'Meteorological Science'
+};
+
+function tc(c){return CAT_MAP[c]||c}
+
+function migrateCats(){
+  STATE.categories=[...new Set(STATE.categories.map(tc))];
+  STATE.articles.forEach(a=>{a.category=tc(a.category)});
+}
+
+function setArticles(list,cats,cfg){
+  STATE.articles=Array.isArray(list)?list:[];
+  if(cfg&&typeof cfg==='object'){
+    PUBLIC_CFG=cfg;
+  }
+  if(Array.isArray(cats)&&cats.length){
+    STATE.categories=cats;
+  }
+  migrateCats();
+  saveLocalState();
+}
+
+
+/* ============================================================
+   WEATHER
+============================================================ */
+
+const WEATHER_CITIES=[
+  {name:'Ljubljana',lat:46.0569,lon:14.5058},
+  {name:'Maribor',lat:46.5547,lon:15.6459},
+  {name:'Koper',lat:45.5481,lon:13.7302},
+  {name:'Kranjska Gora',lat:46.4856,lon:13.7850},
+  {name:'Portorož',lat:45.5143,lon:13.5921},
+  {name:'Celje',lat:46.2397,lon:15.2677},
+  {name:'Novo Mesto',lat:45.8011,lon:15.1710}
+];
+
+const WEATHER_REFRESH_MS=10*60*1000;
+
+
+/* ============================================================
+   CATEGORY ICONS
+============================================================ */
+
+const CAT_ICONS={
+  'Weather in Slovenia':'🇸🇮',
+  'Forecasts':'📅',
+  'Climate Change':'🌡',
+  'Extreme Events':'⚡',
+  'Astronomy':'🔭',
+  'Nature & Environment':'🌿',
+  'Meteorological Science':'🔬',
+  'all':'🏠'
+};
+
+function catIcon(c){return ''}
+
+/* category colours (used for the small square before every category name) */
+const CAT_COLORS={
+  'Weather in Slovenia':'#2F6FED',
+  'Forecasts':'#0E9AA7',
+  'Climate Change':'#E4572E',
+  'Extreme Events':'#D6204A',
+  'Astronomy':'#6A4FE0',
+  'Nature & Environment':'#2E9E5B',
+  'Meteorological Science':'#C98A12'
+};
+
+const CAT_FALLBACK=['#2F6FED','#0E9AA7','#E4572E','#D6204A','#6A4FE0','#2E9E5B','#C98A12','#8A5A44','#3A7CA5'];
+
+function catColor(c){
+
+  c=String(c||'');
+
+  if(CAT_COLORS[c])return CAT_COLORS[c];
+
+  let h=0;
+
+  for(let i=0;i<c.length;i++){
+    h=(h*31+c.charCodeAt(i))>>>0;
+  }
+
+  return CAT_FALLBACK[h%CAT_FALLBACK.length];
+
+}
+
+/* built-in category names are English; custom ones are auto-detected */
+function catSrc(c){
+  return CAT_COLORS[c]?'en':'auto';
+}
+
+
+
+/* ============================================================
+   WMO CODES
+============================================================ */
+
+function getWeatherInfo(code){
+  code=Number(code);
+  if(code===0)return{icon:'☀️',description:'Sunny'};
+  if(code===1)return{icon:'🌤️',description:'Mostly clear'};
+  if(code===2)return{icon:'⛅',description:'Partly cloudy'};
+  if(code===3)return{icon:'☁️',description:'Overcast'};
+  if(code===45||code===48)return{icon:'🌫️',description:'Fog'};
+  if(code===51||code===53||code===55)return{icon:'🌦️',description:'Drizzle'};
+  if(code===56||code===57)return{icon:'🌧️',description:'Freezing drizzle'};
+  if(code===61||code===63||code===65)return{icon:'🌧️',description:'Rain'};
+  if(code===66||code===67)return{icon:'🌧️',description:'Freezing rain'};
+  if(code===71||code===73||code===75)return{icon:'🌨️',description:'Snow'};
+  if(code===77)return{icon:'❄️',description:'Snow grains'};
+  if(code===80||code===81||code===82)return{icon:'🌦️',description:'Rain showers'};
+  if(code===85||code===86)return{icon:'🌨️',description:'Snow showers'};
+  if(code===95)return{icon:'⛈️',description:'Thunderstorm'};
+  if(code===96||code===99)return{icon:'⛈️',description:'Thunderstorm with hail'};
+  return{icon:'🌦️',description:'Variable'};
+}
+
+
+/* ============================================================
+   WIND DIRECTION
+============================================================ */
+
+function getWindDirection(degrees){
+  if(degrees===null||degrees===undefined||isNaN(degrees))return '—';
+  const directions=['N','NE','E','SE','S','SW','W','NW'];
+  return directions[Math.round(Number(degrees)/45)%8];
+}
+
+
+/* ============================================================
+   VISIBILITY
+============================================================ */
+
+function visibilityKm(value){
+  if(value===null||value===undefined||isNaN(value))return '—';
+  return(Number(value)/1000).toFixed(1);
+}
+
+
+/* ============================================================
+   WEATHER FOR ONE CITY
+============================================================ */
+
+async function fetchWeatherCity(city){
+
+  const url=
+    'https://api.open-meteo.com/v1/forecast'+
+    '?latitude='+encodeURIComponent(city.lat)+
+    '&longitude='+encodeURIComponent(city.lon)+
+    '&current='+
+    'temperature_2m,'+
+    'relative_humidity_2m,'+
+    'weather_code,'+
+    'wind_speed_10m,'+
+    'wind_direction_10m,'+
+    'pressure_msl,'+
+    'visibility'+
+    '&temperature_unit=celsius'+
+    '&wind_speed_unit=kmh'+
+    '&timezone=Europe%2FLjubljana';
+
+  const response=await fetch(url,{cache:'no-store'});
+
+  if(!response.ok){
+    throw new Error('Weather API error: '+response.status);
+  }
+
+  const data=await response.json();
+
+  if(!data.current){
+    throw new Error('API returned no current data.');
+  }
+
+  const current=data.current;
+  const info=getWeatherInfo(current.weather_code);
+
+  return{
+    name:city.name,
+    temperature:Number(current.temperature_2m),
+    humidity:Number(current.relative_humidity_2m),
+    weatherCode:Number(current.weather_code),
+    wind:Number(current.wind_speed_10m),
+    windDirection:Number(current.wind_direction_10m),
+    pressure:Number(current.pressure_msl),
+    visibility:Number(current.visibility),
+    icon:info.icon,
+    description:info.description,
+    time:current.time
+  };
+
+}
+
+
+/* ============================================================
+   LOAD WEATHER
+============================================================ */
+
+async function loadWeather(){
+
+  const updateEl=document.getElementById('weatherUpdate');
+
+  if(updateEl){
+    updateEl.textContent='Updating…';
+  }
+
+  try{
+
+    const results=await Promise.all(
+      WEATHER_CITIES.map(city=>fetchWeatherCity(city))
+    );
+
+    STATE.weather=results;
+
+    renderWeatherStrip(results);
+
+    updateSidebarWeather(results.find(w=>w.name==='Ljubljana'));
+
+    const time=new Date().toLocaleTimeString('en-GB',{hour:'2-digit',minute:'2-digit'});
+
+    const el=document.getElementById('weatherUpdate');
+    if(el){
+      el.textContent='Updated at '+time;
+    }
+
+  }catch(error){
+
+    console.error('Error fetching weather:',error);
+
+    if(STATE.weather.length){
+      renderWeatherStrip(STATE.weather);
+      updateSidebarWeather(STATE.weather.find(w=>w.name==='Ljubljana'));
+    }else{
+      renderWeatherError();
+    }
+
+    const el=document.getElementById('weatherUpdate');
+    if(el){
+      el.textContent='Weather currently unavailable';
+    }
+
+  }
+
+}
+
+
+/* ============================================================
+   WEATHER STRIP
+============================================================ */
+
+function renderWeatherStrip(weather){
+
+  const strip=document.getElementById('weatherStrip');
+
+  if(!strip)return;
+
+  strip.innerHTML='';
+
+  weather.forEach(w=>{
+
+    const city=document.createElement('div');
+    city.className='weather-city';
+
+    city.innerHTML=`
+      <span class="weather-icon">${w.icon}</span>
+      <div class="weather-info">
+        <div class="weather-name">${esc(w.name)}</div>
+        <div class="weather-temp">${Math.round(w.temperature)}°C</div>
+        <div class="weather-desc">${esc(w.description)}</div>
+      </div>
+    `;
+
+    strip.appendChild(city);
+
+  });
+
+  const update=document.createElement('div');
+  update.className='weather-update';
+  update.id='weatherUpdate';
+  update.textContent='Updated';
+
+  strip.appendChild(update);
+
+}
+
+
+/* ============================================================
+   WEATHER ERROR
+============================================================ */
+
+function renderWeatherError(){
+
+  const strip=document.getElementById('weatherStrip');
+
+  if(!strip)return;
+
+  strip.innerHTML=`
+    <div class="weather-city">
+      <span class="weather-icon">🌦️</span>
+      <div class="weather-info">
+        <div class="weather-name">Weather</div>
+        <div class="weather-temp">—°C</div>
+        <div class="weather-desc">Data currently unavailable</div>
+      </div>
+    </div>
+    <div class="weather-update" id="weatherUpdate">Retrying in 10 min</div>
+  `;
+
+}
+
+
+/* ============================================================
+   SIDEBAR WEATHER
+============================================================ */
+
+function updateSidebarWeather(weather){
+
+  if(!weather)return;
+
+  const temp=document.getElementById('sidebarTemp');
+  const desc=document.getElementById('sidebarDesc');
+  const humidity=document.getElementById('sidebarHumidity');
+  const wind=document.getElementById('sidebarWind');
+  const pressure=document.getElementById('sidebarPressure');
+  const visibility=document.getElementById('sidebarVisibility');
+  const windDirection=document.getElementById('sidebarWindDirection');
+  const icon=document.getElementById('sidebarWeatherIcon');
+  const lastUpdate=document.getElementById('sidebarLastUpdate');
+
+  if(temp){
+    temp.innerHTML=Math.round(weather.temperature)+'<sup>°C</sup>';
+  }
+
+  if(desc){
+    desc.textContent=weather.icon+' '+weather.description;
+  }
+
+  if(icon){
+    icon.textContent=weather.icon;
+  }
+
+  if(humidity){
+    humidity.textContent=Math.round(weather.humidity)+'%';
+  }
+
+  if(wind){
+    wind.textContent=Math.round(weather.wind)+' km/h';
+  }
+
+  if(windDirection){
+    windDirection.textContent=getWindDirection(weather.windDirection);
+  }
+
+  if(pressure){
+    pressure.textContent=Math.round(weather.pressure)+' hPa';
+  }
+
+  if(visibility){
+    visibility.textContent=visibilityKm(weather.visibility)+' km';
+  }
+
+  if(lastUpdate){
+    lastUpdate.textContent='Data updated at '+
+      new Date().toLocaleTimeString('en-GB',{hour:'2-digit',minute:'2-digit'});
+  }
+
+}
+
+
+/* ============================================================
+   DOM READY
+============================================================ */
+
+document.addEventListener('DOMContentLoaded',()=>{
+
+  loadLocalState();
+  setDate();
+  renderNav();
+  loadArticles();
+  setupSearch();
+  initEditor();
+  initLightbox();
+  initLanguage();
+  loadWeather();
+
+  setInterval(loadWeather,WEATHER_REFRESH_MS);
+
+  document.getElementById('footerYear').textContent=new Date().getFullYear();
+
+  document.getElementById('btnNewArticle').addEventListener('click',()=>openArticleEditor());
+  document.getElementById('btnSettings').addEventListener('click',openSettings);
+  document.getElementById('btnAdminToggle').addEventListener('click',()=>openModal('loginModal'));
+
+  document.querySelectorAll('.modal-overlay').forEach(el=>{
+    let downOnOverlay=false;
+    el.addEventListener('mousedown',e=>{downOnOverlay=(e.target===el)});
+    el.addEventListener('click',e=>{
+      if(e.target===el&&downOnOverlay){
+        el.classList.remove('open');
+      }
+    });
+  });
+
+});
+
+
+/* ============================================================
+   LOCAL STORAGE
+============================================================ */
+
+function loadLocalState(){
+
+  try{
+
+    const s=localStorage.getItem('biometeo_settings');
+    if(s){
+      STATE.settings={...STATE.settings,...JSON.parse(s)};
+    }
+
+    const c=localStorage.getItem('biometeo_cats');
+    if(c){
+      STATE.categories=JSON.parse(c);
+    }
+
+    const a=localStorage.getItem('biometeo_articles');
+    if(a){
+      STATE.articles=JSON.parse(a);
+    }
+
+    migrateCats();
+
+  }catch(e){
+    console.error('localStorage error:',e);
+  }
+
+}
+
+
+function saveLocalState(){
+
+  try{
+    localStorage.setItem('biometeo_settings',JSON.stringify(STATE.settings));
+    localStorage.setItem('biometeo_cats',JSON.stringify(STATE.categories));
+    localStorage.setItem('biometeo_articles',JSON.stringify(STATE.articles));
+  }catch(e){
+    console.error('Error saving:',e);
+  }
+
+}
+
+
+/* ============================================================
+   DATE
+============================================================ */
+
+function setDate(){
+
+  document.getElementById('currentDate').textContent=
+    new Date().toLocaleDateString(LOCALE(),{
+      weekday:'long',
+      year:'numeric',
+      month:'long',
+      day:'numeric'
+    });
+
+}
+
+
+/* ============================================================
+   SEARCH
+   - searches title, summary, author, category and the full article text
+   - ignores case and accents (c = č, s = š, z = ž …)
+   - every word you type must match (AND), best matches first
+   - always searches ALL articles, including the yearly archive
+============================================================ */
+
+/* lowercase + strip accents, keeping the same string length */
+function normText(s){
+
+  let o='';
+
+  for(const ch of String(s||'')){
+
+    if(ch.length>1){
+      o+=ch;
+      continue;
+    }
+
+    const b=ch.normalize('NFD').replace(/[̀-ͯ]/g,'');
+
+    o+=((b||ch).toLowerCase().slice(0,1))||ch;
+
+  }
+
+  return o;
+
+}
+
+function searchTerms(q){
+  return normText(q).split(/\s+/).filter(Boolean);
+}
+
+const SEARCH_CACHE=new WeakMap();
+
+function searchIndex(a){
+
+  let c=SEARCH_CACHE.get(a);
+
+  if(!c){
+
+    const body=stripMedia(a.content||'');
+
+    c={
+      title:normText(a.title),
+      excerpt:normText(a.excerpt),
+      meta:normText((a.category||'')+' '+(a.author||'')),
+      body:normText(body),
+      bodyRaw:body
+    };
+
+    SEARCH_CACHE.set(a,c);
+
+  }
+
+  return c;
+
+}
+
+function searchScore(a,terms){
+
+  const c=searchIndex(a);
+
+  let score=0;
+
+  for(const t of terms){
+
+    let s=0;
+
+    if(c.title.includes(t))s+=10;
+    if(c.excerpt.includes(t))s+=4;
+    if(c.meta.includes(t))s+=3;
+    if(c.body.includes(t))s+=1;
+
+    if(!s)return 0;
+
+    score+=s;
+
+  }
+
+  return score;
+
+}
+
+function highlight(text,terms){
+
+  text=String(text||'');
+
+  const n=normText(text);
+  const marks=new Array(text.length).fill(false);
+
+  terms.forEach(t=>{
+
+    let i=n.indexOf(t);
+
+    while(i!==-1){
+      for(let k=i;k<i+t.length;k++)marks[k]=true;
+      i=n.indexOf(t,i+t.length);
+    }
+
+  });
+
+  let out='';
+  let open=false;
+
+  for(let i=0;i<text.length;i++){
+
+    if(marks[i]&&!open){out+='<mark>';open=true}
+    if(!marks[i]&&open){out+='</mark>';open=false}
+
+    out+=esc(text[i]);
+
+  }
+
+  if(open)out+='</mark>';
+
+  return out;
+
+}
+
+function snippetHtml(a,terms){
+
+  const c=searchIndex(a);
+  const ex=a.excerpt||'';
+
+  if(ex&&terms.some(t=>c.excerpt.includes(t))){
+    return highlight(ex,terms);
+  }
+
+  let idx=-1;
+
+  for(const t of terms){
+    const i=c.body.indexOf(t);
+    if(i!==-1&&(idx===-1||i<idx))idx=i;
+  }
+
+  const raw=c.bodyRaw;
+
+  if(idx===-1){
+    return esc(ex||raw.substring(0,160));
+  }
+
+  const start=Math.max(0,idx-60);
+  const end=Math.min(raw.length,idx+120);
+
+  const piece=raw.slice(start,end).replace(/\s+/g,' ');
+
+  return(start>0?'…':'')+highlight(piece,terms)+(end<raw.length?'…':'');
+
+}
+
+function clearSearchBox(rerender){
+
+  const inp=document.getElementById('searchInput');
+
+  inp.value='';
+
+  document.getElementById('searchClear').style.display='none';
+
+  if(rerender){
+    renderArticles();
+  }
+
+}
+
+
+/* ============================================================
+   LANGUAGES
+   Visitors pick a language in the top bar. UI texts and article
+   texts are translated in the visitor's browser and cached there.
+   - English is the default (the site's own language)
+   - Slovenian UI texts are built in (no network needed)
+   - everything else uses automatic machine translation
+============================================================ */
+
+const LANG_KEY='biometeo_lang';
+const TR_CACHE_KEY='biometeo_tr_v1';
+
+let PUBLIC_CFG={};
+
+const LANGS=[
+  {c:'en',n:'English'},
+  {c:'sl',n:'Slovenščina'},
+  {c:'sq',n:'Shqip'},
+  {c:'eu',n:'Euskara'},
+  {c:'be',n:'Беларуская'},
+  {c:'bs',n:'Bosanski'},
+  {c:'bg',n:'Български'},
+  {c:'ca',n:'Català'},
+  {c:'hr',n:'Hrvatski'},
+  {c:'cs',n:'Čeština'},
+  {c:'da',n:'Dansk'},
+  {c:'nl',n:'Nederlands'},
+  {c:'et',n:'Eesti'},
+  {c:'fi',n:'Suomi'},
+  {c:'fr',n:'Français'},
+  {c:'gl',n:'Galego'},
+  {c:'de',n:'Deutsch'},
+  {c:'el',n:'Ελληνικά'},
+  {c:'hu',n:'Magyar'},
+  {c:'is',n:'Íslenska'},
+  {c:'ga',n:'Gaeilge'},
+  {c:'it',n:'Italiano'},
+  {c:'lv',n:'Latviešu'},
+  {c:'lt',n:'Lietuvių'},
+  {c:'lb',n:'Lëtzebuergesch'},
+  {c:'mk',n:'Македонски'},
+  {c:'mt',n:'Malti'},
+  {c:'no',n:'Norsk'},
+  {c:'pl',n:'Polski'},
+  {c:'pt',n:'Português'},
+  {c:'ro',n:'Română'},
+  {c:'ru',n:'Русский'},
+  {c:'sr',n:'Српски'},
+  {c:'sk',n:'Slovenčina'},
+  {c:'es',n:'Español'},
+  {c:'sv',n:'Svenska'},
+  {c:'tr',n:'Türkçe'},
+  {c:'uk',n:'Українська'},
+  {c:'cy',n:'Cymraeg'}
+];
+
+/* built-in Slovenian interface texts (English -> Slovenian) */
+const DICT={
+  sl:{
+    'Slovenia':'Slovenija',
+    'Editor access':'Uredniški dostop',
+    'Settings':'Nastavitve',
+    'New article':'Nov članek',
+    'Editor mode — you are logged in as administrator':'Uredniški način — prijavljeni ste kot administrator',
+    'Weather · Climate · Nature · Science':'Vreme · Podnebje · Narava · Znanost',
+    'Weather · Climate · Nature · Science · ©':'Vreme · Podnebje · Narava · Znanost · ©',
+    'All news':'Vse novice',
+    'Weather in Slovenia':'Vreme v Sloveniji',
+    'Forecasts':'Napovedi',
+    'Climate Change':'Podnebne spremembe',
+    'Extreme Events':'Ekstremni pojavi',
+    'Astronomy':'Astronomija',
+    'Nature & Environment':'Narava & Okolje',
+    'Meteorological Science':'Meteorološka znanost',
+    'Latest':'Najnovejše',
+    'Refresh':'Osveži',
+    'Loading…':'Nalaganje…',
+    'Search…':'Iskanje…',
+    'Clear search':'Počisti iskanje',
+    'Back to homepage':'Nazaj na naslovnico',
+    'Edit article':'Uredi članek',
+    'Edit':'Uredi',
+    'Delete':'Izbriši',
+    'Photo gallery':'Fotogalerija',
+    'Editorial team':'Uredništvo',
+    'Current weather — Ljubljana':'Trenutno vreme — Ljubljana',
+    'Humidity':'Vlažnost',
+    'Wind':'Veter',
+    'Wind direction':'Smer vetra',
+    'Pressure':'Tlak',
+    'Visibility':'Vidljivost',
+    'Fetching data…':'Pridobivanje podatkov…',
+    'Trending':'Aktualno',
+    'Categories':'Rubrike',
+    'Archive':'Arhiv',
+    'No content yet.':'Ni vsebine.',
+    'No articles':'Ni člankov',
+    'Add article':'Dodaj članek',
+    'No articles have been published in this category.':'V tej rubriki ni objavljenih člankov.',
+    'No articles from this year.':'Ni člankov iz tega leta.',
+    'No news published yet this year — earlier years are in the archive.':'Letos še ni objavljenih novic — starejše so v arhivu.',
+    'Sunny':'Sončno','Mostly clear':'Pretežno jasno','Partly cloudy':'Delno oblačno','Overcast':'Oblačno',
+    'Fog':'Megla','Drizzle':'Rosenje','Freezing drizzle':'Zmrzujoče rosenje','Rain':'Dež','Freezing rain':'Zmrzujoč dež',
+    'Snow':'Sneženje','Snow grains':'Snežna zrna','Rain showers':'Dežne plohe','Snow showers':'Snežne plohe',
+    'Thunderstorm':'Nevihta','Thunderstorm with hail':'Nevihta s točo','Variable':'Spremenljivo',
+    'N':'S','NE':'SV','E':'V','SE':'JV','S':'J','SW':'JZ','W':'Z','NW':'SZ',
+    'Close (Esc)':'Zapri (Esc)','Previous':'Prejšnja','Next':'Naslednja','Language':'Jezik'
+  }
+};
+
+const PATTERNS={
+  sl:[
+    [/^(\d+) min read$/,'$1 min branja'],
+    [/^Search results \((\d+)\)$/,'Rezultati iskanja ($1)'],
+    [/^Data updated at (.+)$/,'Podatki posodobljeni ob $1'],
+    [/^(\d{4}) — Archive$/,'Arhiv $1'],
+    [/^No results for “(.*)”\. Try different words\.$/,'Ni rezultatov za “$1”. Poskusite z drugimi besedami.']
+  ]
+};
+
+const LT={
+  lang:'en',
+  nodes:new WeakMap(),
+  attrs:new WeakMap(),
+  cache:{},
+  queue:[],
+  timer:null,
+  pending:0,
+  failUntil:0,
+  warned:false,
+  obs:null,
+  saveTimer:null
+};
+
+function ltHash(str){
+
+  let h1=0xdeadbeef,h2=0x41c6ce57;
+
+  for(let i=0;i<str.length;i++){
+    const ch=str.charCodeAt(i);
+    h1=Math.imul(h1^ch,2654435761);
+    h2=Math.imul(h2^ch,1597334677);
+  }
+
+  h1=Math.imul(h1^(h1>>>16),2246822507)^Math.imul(h2^(h2>>>13),3266489909);
+  h2=Math.imul(h2^(h2>>>16),2246822507)^Math.imul(h1^(h1>>>13),3266489909);
+
+  return (4294967296*(2097151&h2)+(h1>>>0)).toString(36)+str.length;
+
+}
+
+function LOCALE(){
+
+  const l=LT.lang;
+
+  try{
+    if(l&&Intl.DateTimeFormat.supportedLocalesOf([l]).length){
+      return l==='en'?'en-GB':l;
+    }
+  }catch(e){}
+
+  return 'en-GB';
+
+}
+
+function authorHtml(a){
+
+  const n=(a&&a.author)||'';
+
+  if(!n||n==='Editorial team')return 'Editorial team';
+
+  return '<span translate="no">'+esc(n)+'</span>';
+
+}
+
+
+function srcLang(a){
+  return (a&&a.lang)||'auto';
+}
+
+function ltSaveCache(){
+
+  clearTimeout(LT.saveTimer);
+
+  LT.saveTimer=setTimeout(()=>{
+
+    try{
+
+      const keys=Object.keys(LT.cache);
+
+      if(keys.length>6000){
+        keys.slice(0,keys.length-4500).forEach(k=>delete LT.cache[k]);
+      }
+
+      localStorage.setItem(TR_CACHE_KEY,JSON.stringify(LT.cache));
+
+    }catch(e){
+      LT.cache={};
+      try{localStorage.removeItem(TR_CACHE_KEY)}catch(_){}
+    }
+
+  },800);
+
+}
+
+function ltProgress(on){
+
+  const el=document.getElementById('ltProgress');
+
+  if(!el)return;
+
+  if(on){
+    el.classList.remove('done','on');
+    void el.offsetWidth;
+    el.classList.add('on');
+  }else{
+    el.classList.remove('on');
+    el.classList.add('done');
+  }
+
+}
+
+function ltSkipEl(el){
+  return !!el.closest('[translate="no"],.notranslate,script,style,noscript,textarea,.rte-editor');
+}
+
+function ltSrc(el){
+  const c=el.closest('[data-srclang]');
+  return c?c.getAttribute('data-srclang'):'en';
+}
+
+function ltParts(text){
+
+  const m=String(text).match(/^(\s*)([\s\S]*?)(\s*)$/);
+
+  return{lead:m[1],core:m[2].replace(/\s+/g,' '),trail:m[3]};
+
+}
+
+function ltDict(core,lang){
+
+  const d=DICT[lang];
+
+  if(!d)return null;
+
+  if(Object.prototype.hasOwnProperty.call(d,core))return d[core];
+
+  const m=core.match(/^([^\p{L}\p{N}]*)([\s\S]*)$/u);
+
+  if(m[1]&&Object.prototype.hasOwnProperty.call(d,m[2]))return m[1]+d[m[2]];
+
+  for(const[re,rep] of (PATTERNS[lang]||[])){
+    if(re.test(core))return core.replace(re,rep);
+  }
+
+  return null;
+
+}
+
+/* worth sending to the translation service? */
+function ltCandidate(core){
+
+  if(!/\p{L}/u.test(core))return false;
+
+  if(/^(https?:\/\/|www\.)\S+$/i.test(core)||/^\S+@\S+\.\S+$/.test(core))return false;
+
+  const words=core.replace(/\b(km\/h|hPa|km|°C)\b/gi,' ');
+
+  return /\p{L}{3,}/u.test(words);
+
+}
+
+function ltProcess(rec,src,get,set,lang,need){
+
+  const{lead,core,trail}=ltParts(rec.orig);
+
+  const done=txt=>{
+    if(get()!==txt)set(txt);
+    rec.shown=txt;
+    rec.lang=lang;
+  };
+
+  /* already in the right language */
+  if(src!=='auto'&&src===lang){
+    done(rec.orig);
+    return;
+  }
+
+  const dv=(src==='en'||src==='auto')?ltDict(core,lang):null;
+
+  if(dv!==null){
+    done(lead+dv+trail);
+    return;
+  }
+
+  if(!ltCandidate(core)){
+    done(rec.orig);
+    return;
+  }
+
+  const cached=LT.cache[lang+'|'+ltHash(core)];
+
+  if(cached!==undefined){
+    done(lead+cached+trail);
+    return;
+  }
+
+  done(rec.orig);
+
+  need.push({core,lead,trail,rec,get,set,lang});
+
+}
+
+function ltScan(){
+
+  if(!document.body)return;
+
+  const lang=LT.lang;
+  const need=[];
+
+  const walker=document.createTreeWalker(document.body,NodeFilter.SHOW_TEXT,{
+    acceptNode(n){
+      const p=n.parentElement;
+      if(!p)return NodeFilter.FILTER_REJECT;
+      const t=p.tagName;
+      if(t==='SCRIPT'||t==='STYLE'||t==='NOSCRIPT'||t==='TEXTAREA')return NodeFilter.FILTER_REJECT;
+      if(!n.nodeValue||!n.nodeValue.trim())return NodeFilter.FILTER_REJECT;
+      return NodeFilter.FILTER_ACCEPT;
+    }
+  });
+
+  const nodes=[];
+
+  while(walker.nextNode())nodes.push(walker.currentNode);
+
+  nodes.forEach(n=>{
+
+    const el=n.parentElement;
+
+    if(ltSkipEl(el))return;
+
+    let rec=LT.nodes.get(n);
+
+    if(rec&&rec.shown===n.nodeValue){
+      if(rec.lang===lang)return;
+    }else{
+      rec={orig:n.nodeValue,shown:n.nodeValue,lang:null};
+      LT.nodes.set(n,rec);
+    }
+
+    ltProcess(rec,ltSrc(el),()=>n.nodeValue,v=>{n.nodeValue=v},lang,need);
+
+  });
+
+  /* placeholders and tooltips */
+  document.querySelectorAll('[placeholder],[title]').forEach(el=>{
+
+    if(ltSkipEl(el))return;
+
+    ['placeholder','title'].forEach(attr=>{
+
+      const val=el.getAttribute(attr);
+
+      if(!val)return;
+
+      let all=LT.attrs.get(el);
+
+      if(!all){
+        all={};
+        LT.attrs.set(el,all);
+      }
+
+      let rec=all[attr];
+
+      if(rec&&rec.shown===val){
+        if(rec.lang===lang)return;
+      }else{
+        rec={orig:val,shown:val,lang:null};
+        all[attr]=rec;
+      }
+
+      ltProcess(rec,ltSrc(el),()=>el.getAttribute(attr),v=>el.setAttribute(attr,v),lang,need);
+
+    });
+
+  });
+
+  if(need.length){
+    LT.queue.push(...need);
+    clearTimeout(LT.timer);
+    LT.timer=setTimeout(ltFlush,150);
+  }
+
+}
+
+async function ltFlush(){
+
+  const lang=LT.lang;
+
+  const items=LT.queue.filter(i=>i.lang===lang);
+
+  LT.queue=[];
+
+  if(!items.length)return;
+
+  if(Date.now()<LT.failUntil)return;
+
+  const cores=[...new Set(items.map(i=>i.core))];
+
+  LT.pending++;
+  ltProgress(true);
+
+  try{
+
+    const out=await ltTranslateAll(cores,lang);
+
+    out.forEach((v,k)=>{
+      LT.cache[lang+'|'+ltHash(k)]=v;
+    });
+
+    ltSaveCache();
+
+    if(LT.lang===lang){
+
+      items.forEach(i=>{
+
+        const v=out.get(i.core);
+
+        if(v===undefined)return;
+        if(i.get()!==i.rec.shown)return;
+
+        const txt=i.lead+v+i.trail;
+
+        i.set(txt);
+        i.rec.shown=txt;
+        i.rec.lang=lang;
+
+      });
+
+    }
+
+  }catch(e){
+
+    console.warn('Translation failed:',e);
+
+    LT.failUntil=Date.now()+45000;
+
+    if(!LT.warned){
+      LT.warned=true;
+      toast('Translation service is not reachable right now — showing the original text.','error');
+    }
+
+  }finally{
+
+    LT.pending--;
+
+    if(!LT.pending)ltProgress(false);
+
+  }
+
+}
+
+function ltDecode(s){
+  const ta=document.createElement('textarea');
+  ta.innerHTML=String(s||'');
+  return ta.value;
+}
+
+function ltSplit(core,max){
+
+  if(core.length<=max)return[core];
+
+  const sentences=core.split(/(?<=[.!?…])\s+/);
+
+  const parts=[];
+  let cur='';
+
+  sentences.forEach(s=>{
+
+    while(s.length>max){
+      if(cur){parts.push(cur);cur='';}
+      parts.push(s.slice(0,max));
+      s=s.slice(max);
+    }
+
+    if((cur+' '+s).trim().length>max){
+      parts.push(cur);
+      cur=s;
+    }else{
+      cur=(cur+' '+s).trim();
+    }
+
+  });
+
+  if(cur)parts.push(cur);
+
+  return parts.filter(Boolean);
+
+}
+
+async function ltTranslateAll(cores,lang){
+
+  const key=((STATE.settings&&STATE.settings.translateKey)||PUBLIC_CFG.translateKey||'').trim();
+
+  const max=key?3000:600;
+
+  const plan=cores.map(c=>({core:c,parts:ltSplit(c,max)}));
+
+  const jobs=[...new Set(plan.flatMap(p=>p.parts))];
+
+  const batches=[];
+
+  let cur=[];
+  let len=0;
+
+  const maxChars=key?9000:700;
+  const maxCount=key?80:20;
+
+  jobs.forEach(j=>{
+
+    if(cur.length&&(len+j.length>maxChars||cur.length>=maxCount)){
+      batches.push(cur);
+      cur=[];
+      len=0;
+    }
+
+    cur.push(j);
+    len+=j.length;
+
+  });
+
+  if(cur.length)batches.push(cur);
+
+  const done=new Map();
+
+  let next=0;
+
+  async function worker(){
+
+    while(next<batches.length){
+
+      const b=batches[next++];
+
+      let res;
+
+      try{
+        res=await ltBatch(b,lang,key);
+      }catch(e){
+        await new Promise(r=>setTimeout(r,700));
+        res=await ltBatch(b,lang,key);
+      }
+
+      b.forEach((src,i)=>{
+        if(res[i]!==undefined&&res[i]!=='')done.set(src,res[i]);
+      });
+
+    }
+
+  }
+
+  await Promise.all([worker(),worker(),worker(),worker()]);
+
+  const out=new Map();
+
+  plan.forEach(p=>{
+
+    const tr=p.parts.map(x=>done.get(x));
+
+    if(tr.every(x=>x!==undefined)){
+      out.set(p.core,tr.join(' '));
+    }
+
+  });
+
+  if(!out.size&&cores.length){
+    throw new Error('No translations returned');
+  }
+
+  return out;
+
+}
+
+async function ltBatch(strings,lang,key){
+
+  if(key){
+
+    try{
+
+      const r=await fetch(
+        'https://translation.googleapis.com/language/translate/v2?key='+encodeURIComponent(key),
+        {
+          method:'POST',
+          headers:{'Content-Type':'application/json'},
+          body:JSON.stringify({q:strings,target:lang,format:'text'})
+        }
+      );
+
+      if(!r.ok)throw new Error('HTTP '+r.status);
+
+      const j=await r.json();
+
+      return j.data.translations.map(t=>ltDecode(t.translatedText));
+
+    }catch(e){
+      console.warn('Cloud Translation API failed, trying the free service:',e);
+    }
+
+  }
+
+  return ltBatchFree(strings,lang);
+
+}
+
+async function ltFree(text,lang){
+
+  const url='https://translate.googleapis.com/translate_a/single?client=gtx&sl=auto&tl='+
+    encodeURIComponent(lang)+'&dt=t&q='+encodeURIComponent(text);
+
+  const r=await fetch(url);
+
+  if(!r.ok)throw new Error('HTTP '+r.status);
+
+  const j=await r.json();
+
+  return(j[0]||[]).map(x=>x[0]||'').join('');
+
+}
+
+async function ltBatchFree(strings,lang){
+
+  if(strings.length===1){
+    return[(await ltFree(strings[0],lang)).trim()];
+  }
+
+  const joined=await ltFree(strings.join('\n'),lang);
+
+  const lines=joined.split('\n').map(x=>x.trim());
+
+  while(lines.length&&lines[lines.length-1]==='')lines.pop();
+
+  if(lines.length===strings.length){
+    return lines;
+  }
+
+  /* line count changed — translate one by one instead */
+  const res=[];
+
+  for(const s of strings){
+    res.push((await ltFree(s,lang)).trim());
+  }
+
+  return res;
+
+}
+
+
+/* ---------- language menu ---------- */
+
+function buildLangMenu(){
+
+  const m=document.getElementById('langMenu');
+
+  if(!m)return;
+
+  m.innerHTML=
+    '<div class="lm-title">Language</div><div class="lang-grid">'+
+    LANGS.map(l=>`
+      <button type="button" class="lang-item ${l.c===LT.lang?'active':''}" onclick="setLanguage('${l.c}')">
+        <span>${esc(l.n)}</span><small>${l.c}</small>
+      </button>
+    `).join('')+
+    '</div>';
+
+}
+
+function updateLangLabel(){
+
+  const l=LANGS.find(x=>x.c===LT.lang)||LANGS[0];
+
+  const el=document.getElementById('langBtnLabel');
+
+  if(el)el.textContent=l.n;
+
+}
+
+function toggleLangMenu(e){
+
+  if(e)e.stopPropagation();
+
+  const m=document.getElementById('langMenu');
+
+  if(m.classList.contains('open')){
+    closeLangMenu();
+    return;
+  }
+
+  buildLangMenu();
+
+  const r=document.getElementById('langBtn').getBoundingClientRect();
+
+  const w=Math.min(440,window.innerWidth-24);
+
+  const left=Math.min(Math.max(12,r.right-w),window.innerWidth-w-12);
+
+  m.style.top=(r.bottom+8)+'px';
+  m.style.left=left+'px';
+
+  m.classList.add('open');
+
+}
+
+function closeLangMenu(){
+
+  const m=document.getElementById('langMenu');
+
+  if(m)m.classList.remove('open');
+
+}
+
+function setLanguage(code){
+
+  if(!LANGS.some(l=>l.c===code))code='en';
+
+  LT.lang=code;
+  LT.warned=false;
+  LT.failUntil=0;
+
+  try{localStorage.setItem(LANG_KEY,code)}catch(e){}
+
+  document.documentElement.lang=code;
+
+  updateLangLabel();
+  closeLangMenu();
+
+  /* dates and numbers follow the language */
+  setDate();
+  renderHero();
+  renderArticles();
+  renderSidebar();
+
+  if(STATE.readerId){
+    openReader(STATE.readerId,true);
+  }
+
+  ltScan();
+
+}
+
+function initLanguage(){
+
+  try{
+    LT.cache=JSON.parse(localStorage.getItem(TR_CACHE_KEY)||'{}')||{};
+  }catch(e){
+    LT.cache={};
+  }
+
+  const sel=document.getElementById('articleLang');
+
+  if(sel){
+    sel.innerHTML='<option value="auto">Auto-detect</option>'+
+      LANGS.map(l=>`<option value="${l.c}">${esc(l.n)} (${l.c})</option>`).join('');
+  }
+
+  let code=null;
+
+  try{
+    code=new URLSearchParams(location.search).get('lang')||localStorage.getItem(LANG_KEY);
+  }catch(e){}
+
+  LT.lang=LANGS.some(l=>l.c===code)?code:'en';
+
+  document.documentElement.lang=LT.lang;
+
+  updateLangLabel();
+  buildLangMenu();
+
+  document.addEventListener('click',e=>{
+    if(!e.target.closest('.lang-switch,.lang-menu'))closeLangMenu();
+  });
+
+  document.addEventListener('keydown',e=>{
+    if(e.key==='Escape')closeLangMenu();
+  });
+
+  window.addEventListener('resize',closeLangMenu);
+
+  LT.obs=new MutationObserver(()=>ltScan());
+
+  LT.obs.observe(document.body,{childList:true,subtree:true,characterData:true});
+
+  setDate();
+  ltScan();
+
+}
+
+
+/* ============================================================
+   LIGHTBOX (click an article image to view it full size)
+============================================================ */
+
+let lbList=[];
+let lbIdx=0;
+
+function initLightbox(){
+
+  document.getElementById('readerContent').addEventListener('click',e=>{
+
+    const img=e.target.closest?e.target.closest('img'):null;
+
+    if(img){
+      openLightbox(img);
+    }
+
+  });
+
+  document.addEventListener('keydown',e=>{
+
+    if(!document.getElementById('lightbox').classList.contains('open'))return;
+
+    if(e.key==='Escape')closeLightbox();
+    if(e.key==='ArrowLeft')stepLightbox(-1);
+    if(e.key==='ArrowRight')stepLightbox(1);
+
+  });
+
+}
+
+function openLightbox(img){
+
+  const imgs=[...document.querySelectorAll('#readerContent img')];
+
+  lbList=imgs.map(i=>{
+    const fig=i.closest('figure');
+    const cap=fig?fig.querySelector('figcaption'):null;
+    return{src:i.currentSrc||i.src,cap:cap?cap.textContent:''};
+  });
+
+  lbIdx=Math.max(0,imgs.indexOf(img));
+
+  showLightbox();
+
+  document.getElementById('lightbox').classList.add('open');
+  document.body.style.overflow='hidden';
+
+}
+
+function showLightbox(){
+
+  const it=lbList[lbIdx];
+
+  if(!it)return;
+
+  document.getElementById('lbImg').src=it.src;
+  document.getElementById('lbCap').textContent=it.cap;
+
+  const many=lbList.length>1;
+
+  document.getElementById('lbPrev').classList.toggle('hide',!many);
+  document.getElementById('lbNext').classList.toggle('hide',!many);
+
+}
+
+function stepLightbox(dir){
+
+  if(lbList.length<2)return;
+
+  lbIdx=(lbIdx+dir+lbList.length)%lbList.length;
+
+  showLightbox();
+
+}
+
+function closeLightbox(){
+
+  document.getElementById('lightbox').classList.remove('open');
+  document.body.style.overflow='';
+
+}
+
+
+/* ============================================================
+   YEARLY ARCHIVE
+   Articles from previous years leave the homepage and the
+   categories automatically on 1 January and are listed under
+   their year (e.g. "2026") instead. Nothing is moved or edited
+   in the data — it is decided from each article's date.
+============================================================ */
+
+function currentYear(){
+  return new Date().getFullYear();
+}
+
+function articleYear(a){
+  const y=new Date(a.date).getFullYear();
+  return isNaN(y)?currentYear():y;
+}
+
+function isArchived(a){
+  return articleYear(a)<currentYear();
+}
+
+function currentArticles(){
+  return STATE.articles.filter(a=>!isArchived(a));
+}
+
+function archiveYears(){
+
+  const counts={};
+
+  STATE.articles.forEach(a=>{
+    if(isArchived(a)){
+      const y=articleYear(a);
+      counts[y]=(counts[y]||0)+1;
+    }
+  });
+
+  return Object.keys(counts)
+    .map(Number)
+    .sort((a,b)=>b-a)
+    .map(y=>({year:y,count:counts[y]}));
+
+}
+
+function archiveWidget(){
+
+  const years=archiveYears();
+
+  if(!years.length)return '';
+
+  return`
+    <div class="sidebar-widget">
+
+      <div class="widget-title">Archive</div>
+
+      ${
+        years.map(y=>`
+          <div
+            style="display:flex;justify-content:space-between;align-items:center;padding:8px 0;border-bottom:1px solid var(--border);cursor:pointer;font-size:14px"
+            onclick="filterCategory('year:${y.year}',null)"
+          >
+            <span>${y.year}</span>
+            <span style="font-size:12px;color:var(--gray);font-weight:600">${y.count}</span>
+          </div>
+        `).join('')
+      }
+
+    </div>
+  `;
+
+}
+
+function sectionTitleFor(cat){
+
+  if(cat==='all')return 'Latest';
+
+  if(cat.startsWith('year:'))return cat.slice(5)+' — Archive';
+
+  return cat;
+
+}
+
+
+/* ============================================================
+   NAVIGATION
+============================================================ */
+
+function renderNav(){
+
+  const nav=document.getElementById('navInner');
+
+  nav.innerHTML=`
+    <div class="nav-item ${STATE.currentCategory==='all'?'active':''}" data-cat="all" onclick="filterCategory('all',this)">
+      All news
+    </div>
+  `;
+
+  STATE.categories.forEach(cat=>{
+
+    const d=document.createElement('div');
+
+    d.className='nav-item'+(STATE.currentCategory===cat?' active':'');
+    d.dataset.cat=cat;
+    d.style.setProperty('--cat',catColor(cat));
+    d.textContent=cat;
+
+    d.onclick=function(){
+      filterCategory(cat,this);
+    };
+
+    nav.appendChild(d);
+
+  });
+
+  archiveYears().forEach(y=>{
+
+    const key='year:'+y.year;
+
+    const d=document.createElement('div');
+
+    d.className='nav-item'+(STATE.currentCategory===key?' active':'');
+    d.dataset.cat=key;
+    d.textContent=String(y.year);
+
+    d.onclick=function(){
+      filterCategory(key,this);
+    };
+
+    nav.appendChild(d);
+
+  });
+
+}
+
+
+/* ============================================================
+   FILTERING
+============================================================ */
+
+function filterCategory(cat,el){
+
+  clearSearchBox(false);
+
+  const rs=document.getElementById('readerSection');
+
+  if(rs&&rs.classList.contains('open')){
+    rs.classList.remove('open');
+    document.querySelector('main').classList.remove('reader-open');
+  }
+
+  STATE.currentCategory=cat;
+
+  document.querySelectorAll('.nav-item').forEach(n=>n.classList.remove('active'));
+
+  if(el){
+    el.classList.add('active');
+  }else{
+    const f=document.querySelector(`.nav-item[data-cat="${cssEscape(cat)}"]`);
+    if(f){
+      f.classList.add('active');
+    }
+  }
+
+  document.getElementById('sectionTitle').textContent=sectionTitleFor(cat);
+
+  document.getElementById('heroSection').style.display=cat==='all'?'':'none';
+
+  window.scrollTo({top:0,behavior:'smooth'});
+
+  renderArticles();
+
+}
+
+
+/* ============================================================
+   LOAD ARTICLES
+============================================================ */
+
+async function loadArticles(){
+
+  const{ghOwner,ghRepo,ghFilePath,ghBranch,ghToken}=STATE.settings;
+
+  try{
+
+    const r=await fetch(ghFilePath||'articles.json',{cache:'no-store'});
+
+    if(r.ok){
+
+      const j=await r.json();
+
+      setArticles(j.articles||j,j.categories,j.config);
+
+      renderHero();
+      renderArticles();
+      renderSidebar();
+
+      return;
+
+    }
+
+  }catch(e){}
+
+  if(ghOwner&&ghRepo&&ghFilePath){
+
+    try{
+
+      const r=await fetch(
+        `https://raw.githubusercontent.com/${ghOwner}/${ghRepo}/${ghBranch||'main'}/${ghFilePath}?t=${Date.now()}`
+      );
+
+      if(r.ok){
+
+        const j=await r.json();
+
+        setArticles(j.articles||j,j.categories,j.config);
+
+        renderHero();
+        renderArticles();
+        renderSidebar();
+
+        return;
+
+      }
+
+    }catch(e){}
+
+  }
+
+  if(ghOwner&&ghRepo&&ghFilePath&&ghToken){
+
+    try{
+
+      const r=await fetch(
+        `https://api.github.com/repos/${ghOwner}/${ghRepo}/contents/${ghFilePath}?ref=${ghBranch||'main'}`,
+        {
+          headers:{
+            Authorization:`token ${ghToken}`,
+            Accept:'application/vnd.github.v3+json'
+          }
+        }
+      );
+
+      if(r.ok){
+
+        const j=await r.json();
+
+        const decoded=decodeURIComponent(escape(atob(j.content.replace(/\s/g,''))));
+
+        const parsed=JSON.parse(decoded);
+
+        setArticles(parsed.articles||[],parsed.categories,parsed.config);
+
+      }
+
+    }catch(e){}
+
+  }
+
+  renderHero();
+  renderArticles();
+  renderSidebar();
+
+}
+
+
+/* ============================================================
+   REFRESH ARTICLES
+============================================================ */
+
+async function refreshArticles(){
+
+  const btn=document.getElementById('btnRefresh');
+
+  btn.textContent='↺ …';
+  btn.disabled=true;
+
+  await loadArticles();
+
+  btn.textContent='↺ Refresh';
+  btn.disabled=false;
+
+  toast('News updated.','success');
+
+}
+
+
+/* ============================================================
+   GITHUB
+============================================================ */
+
+async function saveToGitHub(){
+
+  const{ghToken,ghOwner,ghRepo,ghFilePath,ghBranch}=STATE.settings;
+
+  if(!ghToken||!ghOwner||!ghRepo){
+    return false;
+  }
+
+  let sha=null;
+
+  try{
+
+    const r=await fetch(
+      `https://api.github.com/repos/${ghOwner}/${ghRepo}/contents/${ghFilePath}?ref=${ghBranch||'main'}`,
+      {
+        headers:{
+          Authorization:`token ${ghToken}`,
+          Accept:'application/vnd.github.v3+json'
+        }
+      }
+    );
+
+    if(r.ok){
+      const j=await r.json();
+      sha=j.sha;
+    }
+
+  }catch(e){}
+
+  const content=btoa(
+    unescape(
+      encodeURIComponent(
+        JSON.stringify({categories:STATE.categories,config:{translateKey:STATE.settings.translateKey||PUBLIC_CFG.translateKey||''},articles:STATE.articles},null,2)
+      )
+    )
+  );
+
+  const body={
+    message:`Biometeonews — ${new Date().toLocaleString('en-GB')}`,
+    content,
+    branch:ghBranch||'main'
+  };
+
+  if(sha){
+    body.sha=sha;
+  }
+
+  const res=await fetch(
+    `https://api.github.com/repos/${ghOwner}/${ghRepo}/contents/${ghFilePath}`,
+    {
+      method:'PUT',
+      headers:{
+        Authorization:`token ${ghToken}`,
+        'Content-Type':'application/json',
+        Accept:'application/vnd.github.v3+json'
+      },
+      body:JSON.stringify(body)
+    }
+  );
+
+  return res.ok;
+
+}
+
+
+/* ============================================================
+   HERO
+============================================================ */
+
+function renderHero(){
+
+  const s=document.getElementById('heroSection');
+
+  const sorted=currentArticles().sort((a,b)=>new Date(b.date)-new Date(a.date));
+
+  if(!sorted.length){
+    s.innerHTML='';
+    return;
+  }
+
+  const h=sorted[0];
+  const h2=sorted[1];
+  const h3=sorted[2];
+
+  const side=x=>x?`
+    <div class="hero-side" style="--cat:${catColor(x.category)}" data-srclang="${srcLang(x)}" onclick="openReader(${x.id})">
+      <span class="badge" data-srclang="${catSrc(x.category)}">${catIcon(x.category)} ${esc(x.category)}</span>
+      <h3>${esc(x.title)}</h3>
+      <p>${esc(x.excerpt||'')}</p>
+      <div class="hero-side-meta">${authorHtml(x)} · ${formatDate(x.date)}</div>
+    </div>`:'';
+
+  s.innerHTML=`
+
+    <div class="hero-grid">
+
+      <div class="hero-main" style="--cat:${catColor(h.category)}" data-srclang="${srcLang(h)}" onclick="openReader(${h.id})">
+
+        ${
+          h.image
+          ?`<img src="${esc(h.image)}" alt="${esc(h.title)}" loading="lazy">`
+          :`<div class="hero-placeholder"></div>`
+        }
+
+        <div class="hero-main-content">
+          <span class="badge" data-srclang="${catSrc(h.category)}">${catIcon(h.category)} ${esc(h.category)}</span>
+          <h2>${esc(h.title)}</h2>
+          <p>${esc(h.excerpt||'')}</p>
+          <div class="hero-meta">
+            <span>${authorHtml(h)}</span>
+            <span>·</span>
+            <span>${formatDate(h.date)}</span>
+          </div>
+        </div>
+
+      </div>
+
+      ${side(h2)}
+      ${side(h3)}
+
+    </div>
+
+  `;
+
+  if(!window.__heroIntro){
+    window.__heroIntro=true;
+    s.classList.add('intro');
+    setTimeout(()=>s.classList.remove('intro'),1800);
+  }
+
+}
+
+
+/* ============================================================
+   ARTICLES
+============================================================ */
+
+function renderArticles(){
+
+  const grid=document.getElementById('articlesGrid');
+  const searchInput=document.getElementById('searchInput');
+
+  const q=(searchInput.value||'').trim();
+  const terms=q?searchTerms(q):[];
+
+  const isYear=!q&&STATE.currentCategory.startsWith('year:');
+
+  let arts=[...STATE.articles].sort((a,b)=>new Date(b.date)-new Date(a.date));
+
+  if(q){
+
+    /* search: all articles, all categories, all years — best match first */
+    arts=arts
+      .map(a=>({a,s:searchScore(a,terms)}))
+      .filter(x=>x.s>0)
+      .sort((x,y)=>y.s-x.s||new Date(y.a.date)-new Date(x.a.date))
+      .map(x=>x.a);
+
+  }else if(isYear){
+
+    /* archive view: every article of that year, all categories */
+    const yr=Number(STATE.currentCategory.slice(5));
+
+    arts=arts.filter(a=>articleYear(a)===yr);
+
+  }else{
+
+    /* homepage + categories: only the current year */
+    arts=arts.filter(a=>!isArchived(a));
+
+    // The newest article is already shown in the HERO section,
+    // so it is not repeated in the "Latest" list.
+    const featured=arts[0];
+
+    if(STATE.currentCategory==='all'&&featured){
+      arts=arts.filter(a=>a.id!==featured.id);
+    }
+
+    if(STATE.currentCategory!=='all'){
+      arts=arts.filter(a=>a.category===STATE.currentCategory);
+    }
+
+  }
+
+  document.getElementById('sectionTitle').textContent=
+    q?`Search results (${arts.length})`:sectionTitleFor(STATE.currentCategory);
+
+  document.getElementById('heroSection').style.display=
+    (q||STATE.currentCategory!=='all')?'none':'';
+
+  if(!arts.length){
+
+    grid.innerHTML=`
+      <div class="empty-state">
+        <div class="ei">🌦</div>
+        <h3>No articles</h3>
+        <p>${
+          q?`No results for “${esc(q)}”. Try different words.`
+          :isYear?'No articles from this year.'
+          :(STATE.currentCategory==='all'&&archiveYears().length)?'No news published yet this year — earlier years are in the archive.'
+          :'No articles have been published in this category.'
+        }</p>
+        ${STATE.isAdmin?`<button class="btn btn-primary" onclick="openArticleEditor()">+ Add article</button>`:''}
+      </div>
+    `;
+
+    return;
+
+  }
+
+  grid.innerHTML=arts.map(a=>`
+
+    <div class="article-card" style="--cat:${catColor(a.category)}" data-srclang="${srcLang(a)}" onclick="openReader(${a.id})">
+
+      <div class="card-image">
+        ${
+          a.image
+          ?`<img src="${esc(a.image)}" alt="${esc(a.title)}" loading="lazy">`
+          :`<div class="card-image-placeholder"></div>`
+        }
+      </div>
+
+      <div class="card-body">
+
+        <div class="card-category" data-srclang="${catSrc(a.category)}">${esc(a.category)}</div>
+
+        <div class="card-title">${q?highlight(a.title,terms):esc(a.title)}</div>
+
+        <div class="card-excerpt">${q?snippetHtml(a,terms):esc(a.excerpt||stripMedia(a.content||'').substring(0,160))}</div>
+
+        <div class="card-footer">
+          <div class="card-author">
+            <div class="card-avatar">${(a.author||'E')[0].toUpperCase()}</div>
+            <span>${authorHtml(a)}</span>
+          </div>
+          <span>${formatDate(a.date)}</span>
+        </div>
+
+        ${
+          STATE.isAdmin
+          ?`<div class="card-admin-actions" data-srclang="en">
+              <button class="btn btn-outline btn-sm" onclick="event.stopPropagation();openArticleEditor(${a.id})">✎ Edit</button>
+              <button class="btn btn-danger btn-sm" onclick="event.stopPropagation();confirmDelete(${a.id})">✕ Delete</button>
+            </div>`
+          :''
+        }
+
+      </div>
+
+    </div>
+
+  `).join('');
+
+}
+
+
+/* ============================================================
+   SIDEBAR
+============================================================ */
+
+function renderSidebar(){
+
+  const sb=document.getElementById('sidebar');
+
+  /* keep the navigation (incl. archive years) in sync with the data */
+  renderNav();
+
+  const top=currentArticles()
+    .sort((a,b)=>new Date(b.date)-new Date(a.date))
+    .slice(0,6);
+
+  sb.innerHTML=`
+
+    <div class="weather-widget">
+
+      <div class="weather-widget-title">
+        <span id="sidebarWeatherIcon" class="wx-icon">🌦️</span>
+        Current weather — Ljubljana
+      </div>
+
+      <div class="weather-main-temp" id="sidebarTemp">—<sup>°C</sup></div>
+
+      <div class="weather-main-desc" id="sidebarDesc">Fetching data…</div>
+
+      <div class="weather-details">
+
+        <div class="weather-detail-item">
+          <div class="weather-detail-label">Humidity</div>
+          <div class="weather-detail-value" id="sidebarHumidity">—%</div>
+        </div>
+
+        <div class="weather-detail-item">
+          <div class="weather-detail-label">Wind</div>
+          <div class="weather-detail-value" id="sidebarWind">— km/h</div>
+        </div>
+
+        <div class="weather-detail-item">
+          <div class="weather-detail-label">Wind direction</div>
+          <div class="weather-detail-value" id="sidebarWindDirection">—</div>
+        </div>
+
+        <div class="weather-detail-item">
+          <div class="weather-detail-label">Pressure</div>
+          <div class="weather-detail-value" id="sidebarPressure">— hPa</div>
+        </div>
+
+        <div class="weather-detail-item">
+          <div class="weather-detail-label">Visibility</div>
+          <div class="weather-detail-value" id="sidebarVisibility">— km</div>
+        </div>
+
+      </div>
+
+      <div class="weather-last-update" id="sidebarLastUpdate">Fetching data…</div>
+
+    </div>
+
+    <div class="sidebar-widget">
+
+      <div class="widget-title">Trending</div>
+
+      ${
+        top.length
+        ?top.map((a,i)=>`
+          <div class="trending-item" data-srclang="${srcLang(a)}" onclick="openReader(${a.id})">
+            <div class="trending-num">${String(i+1).padStart(2,'0')}</div>
+            <div class="trending-text">
+              <h4>${esc(a.title)}</h4>
+              <span data-srclang="${catSrc(a.category)}">${catIcon(a.category)} ${esc(a.category)} · ${formatDate(a.date)}</span>
+            </div>
+          </div>
+        `).join('')
+        :'<p style="font-size:13px;color:var(--gray)">No content yet.</p>'
+      }
+
+    </div>
+
+    <div class="sidebar-widget">
+
+      <div class="widget-title">Categories</div>
+
+      ${
+        STATE.categories.map(c=>{
+
+          const cnt=currentArticles().filter(a=>a.category===c).length;
+
+          return`
+            <div
+              style="display:flex;justify-content:space-between;align-items:center;padding:8px 0;border-bottom:1px solid var(--border);cursor:pointer;font-size:14px"
+              onclick="filterCategoryByName(${esc(JSON.stringify(c))})"
+            >
+              <span class="sqlabel" style="--cat:${catColor(c)}">${esc(c)}</span>
+              <span style="font-size:12px;color:var(--gray);font-weight:600">${cnt}</span>
+            </div>
+          `;
+
+        }).join('')
+      }
+
+    </div>
+
+    ${archiveWidget()}
+
+  `;
+
+  if(STATE.weather.length){
+    updateSidebarWeather(STATE.weather.find(w=>w.name==='Ljubljana'));
+  }
+
+}
+
+
+/* ============================================================
+   FILTER BY NAME
+============================================================ */
+
+function filterCategoryByName(name){
+
+  clearSearchBox(false);
+
+  const rs=document.getElementById('readerSection');
+  if(rs&&rs.classList.contains('open')){
+    rs.classList.remove('open');
+    document.querySelector('main').classList.remove('reader-open');
+  }
+
+  STATE.currentCategory=name;
+
+  document.querySelectorAll('.nav-item').forEach(n=>n.classList.remove('active'));
+
+  const navItem=[...document.querySelectorAll('.nav-item')].find(n=>n.dataset.cat===name);
+
+  if(navItem){
+    navItem.classList.add('active');
+  }
+
+  document.getElementById('sectionTitle').textContent=name;
+  document.getElementById('heroSection').style.display='none';
+
+  renderArticles();
+
+  window.scrollTo({top:0,behavior:'smooth'});
+
+}
+
+
+/* ============================================================
+   READER
+============================================================ */
+
+function openReader(id,keep){
+
+  const a=STATE.articles.find(x=>x.id===id);
+
+  if(!a)return;
+
+  STATE.readerId=id;
+  document.getElementById('readerContent').setAttribute('data-srclang',srcLang(a));
+
+  const adminBtns=STATE.isAdmin
+    ?`<div class="reader-admin" data-srclang="en">
+        <button class="btn btn-outline" onclick="openArticleEditor(${a.id})">✎ Edit article</button>
+        <button class="btn btn-danger" onclick="confirmDelete(${a.id})">✕ Delete</button>
+      </div>`
+    :'';
+
+  document.getElementById('readerContent').innerHTML=`
+
+    <div class="reader-category" style="--cat:${catColor(a.category)}" data-srclang="${catSrc(a.category)}">${catIcon(a.category)} ${esc(a.category)}</div>
+
+    <h1 class="reader-title">${esc(a.title)}</h1>
+
+    <div class="reader-meta">
+      <span>${authorHtml(a)}</span>
+      <span>·</span>
+      <span>${formatDate(a.date)}</span>
+      <span>·</span>
+      <span data-srclang="en">${readTime(a.content)} min read</span>
+    </div>
+
+    ${
+      a.image
+      ?`<img class="reader-image" src="${esc(a.image)}" alt="${esc(a.title)}" loading="lazy">`
+      :''
+    }
+
+    <div class="reader-body">
+      ${formatContent(a.content||'')}
+    </div>
+
+    ${
+      a.images&&a.images.length
+      ?`<div class="reader-gallery">
+          <div class="reader-gallery-title" data-srclang="en">Photo gallery</div>
+          <div class="reader-gallery-grid">
+            ${
+              a.images.filter(Boolean).map((image,index)=>`
+                <div class="reader-gallery-item">
+                  <img src="${esc(image)}" alt="${esc(a.title)} — photo ${index+1}" loading="lazy">
+                </div>
+              `).join('')
+            }
+          </div>
+        </div>`
+      :''
+    }
+
+    ${adminBtns}
+
+  `;
+
+  document.getElementById('readerCrumbCat').textContent=catIcon(a.category)+' '+a.category;
+
+  document.getElementById('readerSection').classList.add('open');
+  document.querySelector('main').classList.add('reader-open');
+
+  if(!keep){
+    window.scrollTo({top:0,behavior:'smooth'});
+  }
+
+}
+
+
+/* ============================================================
+   CLOSE READER
+============================================================ */
+
+function closeReader(){
+
+  STATE.readerId=null;
+
+  document.getElementById('readerSection').classList.remove('open');
+  document.querySelector('main').classList.remove('reader-open');
+
+  window.scrollTo({top:0,behavior:'smooth'});
+
+}
+
+
+/* ============================================================
+   ADD EXTRA PHOTO FIELD
+============================================================ */
+
+function addArticleImageField(value=''){
+
+  const container=document.getElementById('articleImages');
+
+  const row=document.createElement('div');
+
+  row.style.display='flex';
+  row.style.gap='8px';
+  row.style.alignItems='center';
+
+  row.innerHTML=`
+    <input type="url" class="article-extra-image" placeholder="https://…" value="${esc(value)}" style="flex:1">
+    <button type="button" class="btn btn-danger btn-sm" onclick="this.parentElement.remove()" title="Remove photo">✕</button>
+  `;
+
+  container.appendChild(row);
+
+}
+
+
+/* ============================================================
+   GET EXTRA PHOTOS
+============================================================ */
+
+function getArticleImages(){
+
+  return[...document.querySelectorAll('.article-extra-image')]
+    .map(input=>input.value.trim())
+    .filter(Boolean);
+
+}
+
+
+/* ============================================================
+   INLINE MEDIA (images + YouTube inside the text)
+
+   Stored in the article text as one line each, e.g.:
+   [image url="https://…" size="medium" align="left" caption="…"]
+   [video url="https://youtu.be/…" size="full" align="center"]
+============================================================ */
+
+const MEDIA_LINE=/^\[(image|video)\s+(.*)\]$/i;
+
+function parseAttrs(str){
+
+  const out={};
+  const re=/(\w+)="([^"]*)"/g;
+  let m;
+
+  while((m=re.exec(str))){
+    out[m[1].toLowerCase()]=m[2];
+  }
+
+  return out;
+
+}
+
+function ytId(u){
+
+  u=(u||'').trim();
+
+  const m=u.match(/(?:youtu\.be\/|youtube(?:-nocookie)?\.com\/(?:watch\?(?:.*&)?v=|embed\/|shorts\/|live\/|v\/))([\w-]{11})/i);
+
+  if(m)return m[1];
+
+  if(/^[\w-]{11}$/.test(u))return u;
+
+  return null;
+
+}
+
+function renderMedia(type,a){
+
+  const size=['small','medium','large','full'].includes(a.size)?a.size:'medium';
+  const align=['left','right','center'].includes(a.align)?a.align:'center';
+  const cap=a.caption?`<figcaption>${esc(a.caption)}</figcaption>`:'';
+
+  if(type==='image'){
+
+    if(!a.url)return '';
+
+    return`<figure class="media image size-${size} align-${align}">
+      <div class="frame"><img src="${esc(a.url)}" alt="${esc(a.caption||'')}" loading="lazy"></div>
+      ${cap}
+    </figure>`;
+
+  }
+
+  const id=ytId(a.url);
+
+  if(!id)return '';
+
+  return`<figure class="media video size-${size} align-${align}">
+    <div class="frame">
+      <iframe src="https://www.youtube-nocookie.com/embed/${id}"
+        title="YouTube video player"
+        loading="lazy"
+        allow="accelerometer; encrypted-media; picture-in-picture; fullscreen"
+        allowfullscreen></iframe>
+    </div>
+    ${cap}
+  </figure>`;
+
+}
+
+/* article text without media lines (for excerpts, search, reading time) */
+function stripMedia(text){
+
+  if(isRte(text)){
+
+    const doc=new DOMParser().parseFromString(
+      '<body>'+formatContent(text)+'</body>',
+      'text/html'
+    );
+
+    doc.querySelectorAll('figure').forEach(f=>f.remove());
+    doc.querySelectorAll('p,h2,h3,h4,li,div,blockquote').forEach(e=>e.append(' '));
+
+    return doc.body.textContent.replace(/\s+/g,' ').trim();
+
+  }
+
+  return String(text||'')
+    .split('\n')
+    .filter(l=>!MEDIA_LINE.test(l.trim()))
+    .join('\n');
+
+}
+
+
+/* ---------- editor: insert image / YouTube dialog ---------- */
+
+function openInsertModal(type){
+
+  document.getElementById('insertType').value=type;
+
+  const isVideo=type==='video';
+
+  document.getElementById('insertTitle').textContent=isVideo?'Insert YouTube video':'Insert image';
+  document.getElementById('insertUrlLabel').textContent=isVideo?'YouTube link *':'Image URL *';
+  document.getElementById('insertUrl').placeholder=isVideo?'https://www.youtube.com/watch?v=…':'https://…';
+  document.getElementById('insertUrlHint').textContent=isVideo
+    ?'Paste any YouTube link (watch, youtu.be, shorts or embed).'
+    :'Direct link to the image file.';
+
+  document.getElementById('insertUrl').value='';
+  document.getElementById('insertCaption').value='';
+  document.getElementById('insertSize').value=isVideo?'full':'medium';
+  document.getElementById('insertAlign').value=isVideo?'center':'left';
+
+  openModal('insertModal');
+
+  setTimeout(()=>document.getElementById('insertUrl').focus(),60);
+
+}
+
+function topBlock(node){
+
+  const ed=rteEl();
+
+  while(node&&node.parentNode!==ed){
+    node=node.parentNode;
+  }
+
+  return node;
+
+}
+
+function confirmInsert(){
+
+  const type=document.getElementById('insertType').value;
+  const url=document.getElementById('insertUrl').value.trim();
+  const size=document.getElementById('insertSize').value;
+  const align=document.getElementById('insertAlign').value;
+  const caption=document.getElementById('insertCaption').value
+    .replace(/["\n\r]/g,"'")
+    .trim();
+
+  if(!url){
+    toast(type==='video'?'Paste a YouTube link!':'Enter an image URL!','error');
+    return;
+  }
+
+  if(type==='video'&&!ytId(url)){
+    toast('That does not look like a valid YouTube link.','error');
+    return;
+  }
+
+  if(type==='image'&&!/^https?:\/\//i.test(url)&&!/^data:image\//i.test(url)){
+    toast('Image URL must start with https://','error');
+    return;
+  }
+
+  const tmp=document.createElement('template');
+  tmp.innerHTML=renderMedia(type,{url,size,align,caption});
+
+  const fig=tmp.content.firstElementChild;
+
+  if(!fig){
+    toast('Could not insert media.','error');
+    return;
+  }
+
+  fig.setAttribute('contenteditable','false');
+
+  const ed=rteEl();
+
+  let ref=null;
+  let after=false;
+
+  if(rteSel&&ed.contains(rteSel.startContainer)){
+
+    ref=topBlock(rteSel.startContainer);
+
+    if(ref&&ref.nodeType===1&&!ref.matches('figure')){
+
+      const r=rteSel.cloneRange();
+      r.setEnd(ref,ref.childNodes.length);
+
+      const restEmpty=r.toString().trim()==='';
+      const blockEmpty=!ref.textContent.trim();
+
+      after=restEmpty&&!blockEmpty;
+
+    }else{
+      ref=null;
+    }
+
+  }
+
+  if(ref){
+    if(after){
+      ref.after(fig);
+    }else{
+      ed.insertBefore(fig,ref);
+    }
+  }else{
+    ed.appendChild(fig);
+  }
+
+  if(!fig.nextElementSibling){
+    const p=document.createElement('p');
+    p.innerHTML='<br>';
+    ed.appendChild(p);
+  }
+
+  closeModal('insertModal');
+
+  selectMedia(fig);
+  rteChanged();
+
+  toast(type==='video'?'Video inserted.':'Image inserted.','success');
+
+}
+
+
+/* ============================================================
+   RICH TEXT EDITOR
+============================================================ */
+
+const RTE_MARK='<!--rte-->';
+
+function isRte(c){
+  return typeof c==='string'&&c.trimStart().startsWith(RTE_MARK);
+}
+
+const RTE_TAGS=new Set(['P','BR','STRONG','B','EM','I','U','S','STRIKE','DEL','H2','H3','H4','UL','OL','LI','BLOCKQUOTE','A','SPAN','DIV','FIGURE','FIGCAPTION','IMG','IFRAME','HR','SUB','SUP']);
+const RTE_DROP=new Set(['SCRIPT','STYLE','OBJECT','EMBED','NOSCRIPT','TEMPLATE','TITLE','HEAD','LINK','META','SVG','CANVAS','AUDIO','VIDEO','FORM','INPUT','BUTTON','SELECT','TEXTAREA']);
+const RTE_STYLES=['font-size','color','background-color','text-align','font-weight','font-style','text-decoration'];
+const RTE_CLASS=/^(media|image|video|frame|size-(small|medium|large|full)|align-(left|right|center))$/;
+
+function cleanStyle(str){
+
+  return String(str||'')
+    .split(';')
+    .map(d=>d.trim())
+    .filter(Boolean)
+    .map(d=>{
+
+      const i=d.indexOf(':');
+
+      if(i<0)return '';
+
+      const p=d.slice(0,i).trim().toLowerCase();
+      const v=d.slice(i+1).trim();
+
+      if(!RTE_STYLES.includes(p))return '';
+      if(!/^[#\w\s.,%()\-]+$/.test(v))return '';
+      if(/url|expression|javascript/i.test(v))return '';
+
+      return p+':'+v;
+
+    })
+    .filter(Boolean)
+    .join(';');
+
+}
+
+/* whitelist sanitizer: article HTML is rendered on the public site */
+function sanitizeHtml(html,opts){
+
+  opts=opts||{};
+
+  const doc=new DOMParser().parseFromString('<body>'+String(html||'')+'</body>','text/html');
+  const out=doc.createElement('div');
+
+  const MAP={H1:'H2',H5:'H4',H6:'H4'};
+
+  (function walk(src,dst){
+
+    src.childNodes.forEach(n=>{
+
+      if(n.nodeType===3){
+        dst.appendChild(doc.createTextNode(n.nodeValue));
+        return;
+      }
+
+      if(n.nodeType!==1)return;
+
+      let tag=n.tagName;
+
+      if(RTE_DROP.has(tag))return;
+
+      if(opts.noMedia&&(tag==='IMG'||tag==='IFRAME'||tag==='FIGURE'))return;
+
+      if(MAP[tag])tag=MAP[tag];
+
+      if(!RTE_TAGS.has(tag)){
+        walk(n,dst);
+        return;
+      }
+
+      const el=doc.createElement(tag.toLowerCase());
+
+      if(tag==='A'){
+
+        const href=(n.getAttribute('href')||'').trim();
+
+        if(/^(https?:\/\/|mailto:|tel:)/i.test(href)){
+          el.setAttribute('href',href);
+          el.setAttribute('target','_blank');
+          el.setAttribute('rel','noopener noreferrer');
+        }
+
+      }else if(tag==='IMG'){
+
+        const srcAttr=(n.getAttribute('src')||'').trim();
+
+        if(!/^(https?:\/\/|data:image\/(png|jpe?g|gif|webp);)/i.test(srcAttr))return;
+
+        el.setAttribute('src',srcAttr);
+        el.setAttribute('alt',n.getAttribute('alt')||'');
+        el.setAttribute('loading','lazy');
+
+      }else if(tag==='IFRAME'){
+
+        const srcAttr=(n.getAttribute('src')||'').trim();
+
+        if(!/^https:\/\/www\.youtube-nocookie\.com\/embed\/[\w-]{11}$/.test(srcAttr))return;
+
+        el.setAttribute('src',srcAttr);
+        el.setAttribute('title','YouTube video player');
+        el.setAttribute('loading','lazy');
+        el.setAttribute('allow','accelerometer; encrypted-media; picture-in-picture; fullscreen');
+        el.setAttribute('allowfullscreen','');
+
+      }
+
+      const st=cleanStyle(n.getAttribute('style'));
+
+      if(st&&tag!=='IMG'&&tag!=='IFRAME'){
+        el.setAttribute('style',st);
+      }
+
+      const cls=(n.getAttribute('class')||'')
+        .split(/\s+/)
+        .filter(c=>RTE_CLASS.test(c))
+        .join(' ');
+
+      if(cls&&(tag==='FIGURE'||tag==='DIV')){
+        el.setAttribute('class',cls);
+      }
+
+      walk(n,el);
+
+      dst.appendChild(el);
+
+    });
+
+  })(doc.body,out);
+
+  return out.innerHTML;
+
+}
+
+function rteEl(){
+  return document.getElementById('articleContent');
+}
+
+let rteSel=null;
+let selectedFig=null;
+
+document.addEventListener('selectionchange',()=>{
+
+  const ed=rteEl();
+
+  if(!ed)return;
+
+  const s=window.getSelection();
+
+  if(s&&s.rangeCount&&ed.contains(s.anchorNode)){
+    rteSel=s.getRangeAt(0).cloneRange();
+    updateToolbarState();
+  }
+
+});
+
+function restoreSel(){
+
+  const ed=rteEl();
+
+  ed.focus();
+
+  if(rteSel){
+    const s=window.getSelection();
+    s.removeAllRanges();
+    s.addRange(rteSel);
+  }
+
+}
+
+function rteCmd(cmd,val,css){
+
+  restoreSel();
+
+  try{
+    document.execCommand('styleWithCSS',false,!!css);
+    document.execCommand(cmd,false,val===undefined?null:val);
+  }catch(e){}
+
+  rteChanged();
+  updateToolbarState();
+
+}
+
+function rteBlock(tag){
+
+  if(!tag)return;
+
+  restoreSel();
+
+  try{
+    document.execCommand('formatBlock',false,'<'+tag+'>');
+  }catch(e){}
+
+  rteChanged();
+  updateToolbarState();
+
+}
+
+function rteColor(cmd,value){
+
+  if(cmd==='foreColor'){
+    document.querySelector('#rteColorLetter').style.borderBottomColor=value;
+  }else{
+    const l=document.getElementById('rteHiliteLetter');
+    l.style.background=value;
+  }
+
+  rteCmd(cmd,value,true);
+
+}
+
+function rteClear(){
+
+  restoreSel();
+
+  try{
+    document.execCommand('removeFormat',false,null);
+    document.execCommand('formatBlock',false,'<p>');
+  }catch(e){}
+
+  rteChanged();
+  updateToolbarState();
+
+}
+
+const FONT_SIZES=[12,14,16,18,20,24,28,32,40,48];
+
+function applyFontSize(px){
+
+  restoreSel();
+
+  const s=window.getSelection();
+
+  if(!s.rangeCount||s.isCollapsed){
+    toast('Select some text first.','error');
+    return;
+  }
+
+  const ed=rteEl();
+
+  try{
+    document.execCommand('styleWithCSS',false,false);
+    document.execCommand('fontSize',false,'7');
+  }catch(e){}
+
+  const spans=[];
+
+  ed.querySelectorAll('font[size="7"]').forEach(f=>{
+
+    const span=document.createElement('span');
+    span.style.fontSize=px+'px';
+
+    while(f.firstChild){
+      span.appendChild(f.firstChild);
+    }
+
+    f.replaceWith(span);
+
+    /* inner sizes would override the new one */
+    span.querySelectorAll('[style*="font-size"]').forEach(inner=>{
+      inner.style.fontSize='';
+      if(!inner.getAttribute('style')){
+        inner.removeAttribute('style');
+      }
+    });
+
+    spans.push(span);
+
+  });
+
+  if(spans.length){
+
+    const r=document.createRange();
+    r.setStartBefore(spans[0]);
+    r.setEndAfter(spans[spans.length-1]);
+
+    s.removeAllRanges();
+    s.addRange(r);
+
+    rteSel=r.cloneRange();
+
+  }
+
+  rteChanged();
+  updateToolbarState();
+
+}
+
+function rteSizeSelect(v){
+
+  if(!v)return;
+
+  applyFontSize(Number(v));
+
+}
+
+function stepFontSize(dir){
+
+  restoreSel();
+
+  const s=window.getSelection();
+
+  if(!s.rangeCount||s.isCollapsed){
+    toast('Select some text first.','error');
+    return;
+  }
+
+  let el=s.anchorNode;
+
+  if(el&&el.nodeType===3)el=el.parentElement;
+
+  const cur=Math.round(parseFloat(getComputedStyle(el).fontSize))||18;
+
+  let next;
+
+  if(dir>0){
+    next=FONT_SIZES.find(x=>x>cur);
+    if(next===undefined)next=FONT_SIZES[FONT_SIZES.length-1];
+  }else{
+    next=[...FONT_SIZES].reverse().find(x=>x<cur);
+    if(next===undefined)next=FONT_SIZES[0];
+  }
+
+  applyFontSize(next);
+
+}
+
+function updateToolbarState(){
+
+  const ed=rteEl();
+
+  if(!ed||!document.getElementById('editorModal').classList.contains('open'))return;
+
+  const map={
+    rteBold:'bold',
+    rteItalic:'italic',
+    rteUnderline:'underline',
+    rteStrike:'strikeThrough',
+    rteUL:'insertUnorderedList',
+    rteOL:'insertOrderedList',
+    rteLeft:'justifyLeft',
+    rteCenter:'justifyCenter',
+    rteRight:'justifyRight',
+    rteJustify:'justifyFull'
+  };
+
+  try{
+
+    Object.keys(map).forEach(id=>{
+      const b=document.getElementById(id);
+      if(b){
+        b.classList.toggle('active',!!document.queryCommandState(map[id]));
+      }
+    });
+
+    const v=String(document.queryCommandValue('formatBlock')||'').toLowerCase().replace(/[<>]/g,'');
+
+    document.getElementById('rteBlock').value=['p','h2','h3','h4','blockquote'].includes(v)?v:'p';
+
+    const sel=window.getSelection();
+
+    if(sel.rangeCount){
+
+      let el=sel.anchorNode;
+
+      if(el&&el.nodeType===3)el=el.parentElement;
+
+      if(el&&ed.contains(el)){
+        const px=String(Math.round(parseFloat(getComputedStyle(el).fontSize)));
+        document.getElementById('rteSize').value=FONT_SIZES.includes(Number(px))?px:'';
+      }
+
+    }
+
+  }catch(e){}
+
+}
+
+function rteChanged(){
+
+  const ed=rteEl();
+
+  if(!ed.firstChild||ed.innerHTML==='<br>'){
+    ed.innerHTML='<p><br></p>';
+    const r=document.createRange();
+    r.setStart(ed.firstChild,0);
+    r.collapse(true);
+    const s=window.getSelection();
+    s.removeAllRanges();
+    s.addRange(r);
+  }
+
+  const empty=!ed.textContent.trim()&&!ed.querySelector('figure');
+
+  document.getElementById('rteWrap').classList.toggle('is-empty',empty);
+
+}
+
+function initEditor(){
+
+  const ed=rteEl();
+
+  if(!ed)return;
+
+  try{
+    document.execCommand('defaultParagraphSeparator',false,'p');
+  }catch(e){}
+
+  ed.addEventListener('input',rteChanged);
+
+  ed.addEventListener('click',e=>{
+
+    const f=e.target.closest?e.target.closest('figure.media'):null;
+
+    selectMedia(f&&ed.contains(f)?f:null);
+
+  });
+
+  ed.addEventListener('paste',e=>{
+
+    e.preventDefault();
+
+    const cd=e.clipboardData;
+
+    if(!cd)return;
+
+    const html=cd.getData('text/html');
+    const text=cd.getData('text/plain');
+
+    let ins;
+
+    if(html){
+      ins=sanitizeHtml(html,{noMedia:true});
+    }else{
+      ins=esc(text).replace(/\r?\n/g,'<br>');
+    }
+
+    document.execCommand('insertHTML',false,ins);
+
+    rteChanged();
+
+  });
+
+}
+
+function setEditorContent(content){
+
+  const ed=rteEl();
+
+  let html;
+
+  if(isRte(content)){
+    html=sanitizeHtml(String(content).trimStart().slice(RTE_MARK.length));
+  }else{
+    html=formatContent(content||'');
+  }
+
+  ed.innerHTML=html||'<p><br></p>';
+
+  ed.querySelectorAll('figure.media').forEach(f=>f.setAttribute('contenteditable','false'));
+
+  rteSel=null;
+
+  selectMedia(null);
+
+  rteChanged();
+
+  ed.scrollTop=0;
+
+}
+
+function getEditorHtml(){
+
+  const clone=rteEl().cloneNode(true);
+
+  clone.querySelectorAll('.selected').forEach(e=>e.classList.remove('selected'));
+  clone.querySelectorAll('[contenteditable]').forEach(e=>e.removeAttribute('contenteditable'));
+
+  /* drop trailing empty paragraphs */
+  while(
+    clone.lastElementChild&&
+    clone.lastElementChild.tagName==='P'&&
+    !clone.lastElementChild.textContent.trim()&&
+    !clone.lastElementChild.querySelector('img,iframe')
+  ){
+    clone.lastElementChild.remove();
+  }
+
+  return sanitizeHtml(clone.innerHTML);
+
+}
+
+
+/* ---------- selected image / video controls ---------- */
+
+function selectMedia(fig){
+
+  const ed=rteEl();
+
+  ed.querySelectorAll('figure.selected').forEach(f=>f.classList.remove('selected'));
+
+  selectedFig=fig||null;
+
+  const bar=document.getElementById('rteMediaBar');
+
+  if(!fig){
+    bar.classList.remove('show');
+    return;
+  }
+
+  fig.classList.add('selected');
+
+  const cls=[...fig.classList];
+
+  const size=(cls.find(c=>c.startsWith('size-'))||'size-medium').slice(5);
+  const align=(cls.find(c=>c.startsWith('align-'))||'align-center').slice(6);
+
+  document.getElementById('mbKind').textContent=fig.classList.contains('video')?'▶ Video':'🖼 Image';
+  document.getElementById('mbSize').value=size;
+  document.getElementById('mbAlign').value=align;
+
+  const cap=fig.querySelector('figcaption');
+
+  document.getElementById('mbCaption').value=cap?cap.textContent:'';
+
+  bar.classList.add('show');
+
+}
+
+function setMediaSize(v){
+
+  if(!selectedFig)return;
+
+  ['small','medium','large','full'].forEach(s=>selectedFig.classList.remove('size-'+s));
+  selectedFig.classList.add('size-'+v);
+
+}
+
+function setMediaAlign(v){
+
+  if(!selectedFig)return;
+
+  ['left','right','center'].forEach(s=>selectedFig.classList.remove('align-'+s));
+  selectedFig.classList.add('align-'+v);
+
+}
+
+function setMediaCaption(v){
+
+  if(!selectedFig)return;
+
+  let cap=selectedFig.querySelector('figcaption');
+
+  v=v.replace(/["\n\r]/g,"'");
+
+  if(!v.trim()){
+    if(cap)cap.remove();
+    return;
+  }
+
+  if(!cap){
+    cap=document.createElement('figcaption');
+    selectedFig.appendChild(cap);
+  }
+
+  cap.textContent=v;
+
+}
+
+function moveMedia(dir){
+
+  const f=selectedFig;
+
+  if(!f)return;
+
+  if(dir<0){
+    const p=f.previousElementSibling;
+    if(p)f.parentNode.insertBefore(f,p);
+  }else{
+    const n=f.nextElementSibling;
+    if(n)n.after(f);
+  }
+
+  f.scrollIntoView({block:'nearest'});
+
+}
+
+function removeMedia(){
+
+  if(!selectedFig)return;
+
+  selectedFig.remove();
+
+  selectMedia(null);
+
+  rteChanged();
+
+}
+
+
+/* ---------- link dialog ---------- */
+
+function openLinkModal(){
+
+  document.getElementById('linkUrl').value='';
+
+  openModal('linkModal');
+
+  setTimeout(()=>document.getElementById('linkUrl').focus(),60);
+
+}
+
+function applyLink(){
+
+  let url=document.getElementById('linkUrl').value.trim();
+
+  if(!url){
+    toast('Enter a link URL!','error');
+    return;
+  }
+
+  if(!/^(https?:\/\/|mailto:|tel:)/i.test(url)){
+    url='https://'+url;
+  }
+
+  closeModal('linkModal');
+
+  restoreSel();
+
+  const s=window.getSelection();
+
+  try{
+
+    if(!s.rangeCount||s.isCollapsed){
+      document.execCommand('insertHTML',false,`<a href="${esc(url)}">${esc(url)}</a>`);
+    }else{
+      document.execCommand('createLink',false,url);
+    }
+
+  }catch(e){}
+
+  rteChanged();
+
+}
+
+
+/* ============================================================
+   EDITOR
+============================================================ */
+
+function openArticleEditor(id=null){
+
+  if(!STATE.isAdmin)return;
+
+  const sel=document.getElementById('articleCategory');
+
+  sel.innerHTML=STATE.categories
+    .map(c=>`<option value="${esc(c)}">${esc(c)}</option>`)
+    .join('');
+
+  if(id){
+
+    const a=STATE.articles.find(x=>x.id===id);
+
+    if(!a)return;
+
+    document.getElementById('editorTitle').textContent='Edit article';
+    document.getElementById('editingId').value=id;
+    document.getElementById('articleTitle').value=a.title;
+    document.getElementById('articleLang').value=a.lang||'auto';
+    document.getElementById('articleCategory').value=a.category;
+    document.getElementById('articleAuthor').value=a.author||'';
+    document.getElementById('articleExcerpt').value=a.excerpt||'';
+    setEditorContent(a.content||'');
+    document.getElementById('articleImage').value=a.image||'';
+
+    /* LOAD EXTRA PHOTOS */
+
+    const imagesContainer=document.getElementById('articleImages');
+
+    imagesContainer.innerHTML='';
+
+    (a.images||[]).forEach(image=>addArticleImageField(image));
+
+    document.getElementById('btnSaveArticle').textContent='Save changes';
+
+  }else{
+
+    document.getElementById('editorTitle').textContent='New article';
+    document.getElementById('editingId').value='';
+    document.getElementById('articleLang').value='auto';
+
+    [
+      'articleTitle',
+      'articleAuthor',
+      'articleExcerpt',
+      'articleImage'
+    ].forEach(i=>document.getElementById(i).value='');
+
+    setEditorContent('');
+
+    /* CLEAR EXTRA PHOTOS */
+
+    document.getElementById('articleImages').innerHTML='';
+
+    document.getElementById('btnSaveArticle').textContent='Publish article';
+
+  }
+
+  openModal('editorModal');
+
+}
+
+
+/* ============================================================
+   SAVE ARTICLE
+============================================================ */
+
+async function saveArticle(){
+
+  const title=document.getElementById('articleTitle').value.trim();
+  const ed=document.getElementById('articleContent');
+  const hasContent=ed.textContent.trim().length>0||!!ed.querySelector('figure');
+  const content=hasContent?RTE_MARK+getEditorHtml():'';
+
+  /* GET EXTRA PHOTOS */
+
+  const images=getArticleImages();
+
+  if(!title){
+    toast('Enter a title!','error');
+    return;
+  }
+
+  if(!content){
+    toast('Enter some content!','error');
+    return;
+  }
+
+  const btn=document.getElementById('btnSaveArticle');
+
+  const editingId=document.getElementById('editingId').value;
+
+  const origText=editingId?'Save changes':'Publish article';
+
+  btn.disabled=true;
+
+  btn.innerHTML='<span style="display:inline-block;width:13px;height:13px;border:2px solid rgba(128,128,128,.4);border-top-color:var(--paper);border-radius:50%;animation:spin .7s linear infinite;vertical-align:middle;margin-right:6px"></span>Saving…';
+
+  const article={
+
+    id:editingId?parseInt(editingId):Date.now(),
+
+    title,
+
+    lang:document.getElementById('articleLang').value||'auto',
+
+    category:document.getElementById('articleCategory').value,
+
+    author:document.getElementById('articleAuthor').value.trim()||'Editorial team',
+
+    excerpt:document.getElementById('articleExcerpt').value.trim(),
+
+    content,
+
+    image:document.getElementById('articleImage').value.trim(),
+
+    /* EXTRA PHOTOS */
+
+    images,
+
+    date:editingId
+      ?(STATE.articles.find(a=>a.id===parseInt(editingId))?.date||new Date().toISOString())
+      :new Date().toISOString(),
+
+    updated:new Date().toISOString()
+
+  };
+
+
+  if(editingId){
+
+    const idx=STATE.articles.findIndex(a=>a.id===parseInt(editingId));
+
+    if(idx!==-1){
+      STATE.articles[idx]=article;
+    }else{
+      STATE.articles.unshift(article);
+    }
+
+  }else{
+
+    STATE.articles.unshift(article);
+
+  }
+
+
+  saveLocalState();
+
+  let ghOk=false;
+
+  try{
+    ghOk=await saveToGitHub();
+  }catch(e){}
+
+
+  btn.disabled=false;
+  btn.innerHTML=origText;
+
+  closeModal('editorModal');
+
+  renderHero();
+  renderArticles();
+  renderSidebar();
+
+  toast(
+    ghOk?'Article published to GitHub! ✓':'Saved locally (GitHub not configured)',
+    ghOk?'success':'error'
+  );
+
+}
+
+
+/* ============================================================
+   DELETE
+============================================================ */
+
+function confirmDelete(id){
+
+  openModal('confirmModal');
+
+  document.getElementById('btnConfirmDelete').onclick=async()=>{
+
+    STATE.articles=STATE.articles.filter(a=>a.id!==id);
+
+    saveLocalState();
+
+    try{
+      await saveToGitHub();
+    }catch(e){}
+
+    closeModal('confirmModal');
+
+    renderHero();
+    renderArticles();
+    renderSidebar();
+
+    if(document.getElementById('readerSection').classList.contains('open')){
+      closeReader();
+    }
+
+    toast('Article deleted.','success');
+
+  };
+
+}
+
+
+/* ============================================================
+   ADMIN LOGIN
+============================================================ */
+
+function checkAdminLogin(){
+
+  const pw=document.getElementById('adminPassword').value;
+
+  if(pw===STATE.settings.adminPass){
+
+    STATE.isAdmin=true;
+
+    closeModal('loginModal');
+
+    document.getElementById('adminBanner').classList.add('visible');
+    document.getElementById('btnNewArticle').style.display='inline-flex';
+    document.getElementById('btnSettings').style.display='inline-block';
+    document.getElementById('btnAdminToggle').textContent='Log out';
+    document.getElementById('btnAdminToggle').onclick=adminLogout;
+    document.getElementById('adminPassword').value='';
+
+    renderArticles();
+
+    toast('Welcome, editor!','success');
+
+  }else{
+
+    toast('Wrong password.','error');
+
+  }
+
+}
+
+
+/* ============================================================
+   ADMIN LOGOUT
+============================================================ */
+
+function adminLogout(){
+
+  STATE.isAdmin=false;
+
+  document.getElementById('adminBanner').classList.remove('visible');
+  document.getElementById('btnNewArticle').style.display='none';
+  document.getElementById('btnSettings').style.display='none';
+
+  const btn=document.getElementById('btnAdminToggle');
+
+  btn.textContent='Editor access';
+  btn.onclick=()=>openModal('loginModal');
+
+  renderArticles();
+
+  toast('Logged out.','success');
+
+}
+
+
+/* ============================================================
+   SETTINGS
+============================================================ */
+
+function openSettings(){
+
+  const s=STATE.settings;
+
+  document.getElementById('ghToken').value=s.ghToken||'';
+  document.getElementById('ghOwner').value=s.ghOwner||'';
+  document.getElementById('ghRepo').value=s.ghRepo||'';
+  document.getElementById('ghBranch').value=s.ghBranch||'main';
+  document.getElementById('ghFilePath').value=s.ghFilePath||'articles.json';
+  document.getElementById('translateKey').value=s.translateKey||'';
+
+  renderRubrikaList();
+
+  openModal('settingsModal');
+
+}
+
+
+/* ============================================================
+   SAVE SETTINGS
+============================================================ */
+
+function saveSettings(){
+
+  STATE.settings.ghToken=document.getElementById('ghToken').value.trim();
+  STATE.settings.ghOwner=document.getElementById('ghOwner').value.trim();
+  STATE.settings.ghRepo=document.getElementById('ghRepo').value.trim();
+  STATE.settings.ghBranch=document.getElementById('ghBranch').value.trim()||'main';
+  STATE.settings.ghFilePath=document.getElementById('ghFilePath').value.trim()||'articles.json';
+  STATE.settings.translateKey=document.getElementById('translateKey').value.trim();
+
+  saveLocalState();
+
+  toast('Settings saved.','success');
+
+}
+
+
+/* ============================================================
+   PASSWORD
+============================================================ */
+
+function changePassword(){
+
+  const p=document.getElementById('newAdminPass').value.trim();
+
+  if(!p){
+    toast('Enter a new password!','error');
+    return;
+  }
+
+  STATE.settings.adminPass=p;
+
+  saveLocalState();
+
+  document.getElementById('newAdminPass').value='';
+
+  toast('Password changed.','success');
+
+}
+
+
+/* ============================================================
+   GITHUB CONNECTION
+============================================================ */
+
+async function testConnection(){
+
+  const{ghToken,ghOwner,ghRepo}=STATE.settings;
+
+  if(!ghToken||!ghOwner||!ghRepo){
+    toast('Fill in all fields and save first.','error');
+    return;
+  }
+
+  try{
+
+    const r=await fetch(
+      `https://api.github.com/repos/${ghOwner}/${ghRepo}`,
+      {headers:{Authorization:`token ${ghToken}`}}
+    );
+
+    toast(
+      r.ok?'GitHub connection successful! ✓':'Error: '+r.status,
+      r.ok?'success':'error'
+    );
+
+  }catch(e){
+
+    toast('Connection error.','error');
+
+  }
+
+}
+
+
+/* ============================================================
+   CATEGORIES
+============================================================ */
+
+function renderRubrikaList(){
+
+  const list=document.getElementById('rubrikaList');
+  const n=STATE.categories.length;
+
+  list.innerHTML=STATE.categories.map((c,i)=>`
+    <div class="rubrika-item" draggable="true" data-index="${i}">
+      <span class="rubrika-handle" title="Drag to reorder">⠿</span>
+      <span class="rubrika-name">${catIcon(c)} ${esc(c)}</span>
+      <span class="rubrika-actions">
+        <button class="btn btn-outline btn-sm" onclick="moveRubrika(${i},-1)" ${i===0?'disabled':''} title="Move up">▲</button>
+        <button class="btn btn-outline btn-sm" onclick="moveRubrika(${i},1)" ${i===n-1?'disabled':''} title="Move down">▼</button>
+        <button class="btn btn-outline btn-sm" onclick="deleteRubrika(${i})">Remove</button>
+      </span>
+    </div>
+  `).join('');
+
+  /* drag & drop reordering */
+  let dragIdx=null;
+
+  list.querySelectorAll('.rubrika-item').forEach(el=>{
+
+    el.addEventListener('dragstart',e=>{
+      dragIdx=Number(el.dataset.index);
+      el.classList.add('dragging');
+      e.dataTransfer.effectAllowed='move';
+      try{e.dataTransfer.setData('text/plain',String(dragIdx))}catch(_){}
+    });
+
+    el.addEventListener('dragend',()=>{
+      el.classList.remove('dragging');
+      list.querySelectorAll('.drag-over').forEach(x=>x.classList.remove('drag-over'));
+    });
+
+    el.addEventListener('dragover',e=>{
+      e.preventDefault();
+      el.classList.add('drag-over');
+    });
+
+    el.addEventListener('dragleave',()=>el.classList.remove('drag-over'));
+
+    el.addEventListener('drop',e=>{
+      e.preventDefault();
+      const to=Number(el.dataset.index);
+      if(dragIdx!==null&&dragIdx!==to){
+        reorderRubrika(dragIdx,to);
+      }
+      dragIdx=null;
+    });
+
+  });
+
+}
+
+
+function reorderRubrika(from,to){
+
+  const[moved]=STATE.categories.splice(from,1);
+  STATE.categories.splice(to,0,moved);
+
+  saveLocalState();
+
+  renderRubrikaList();
+  renderNav();
+  renderSidebar();
+
+  syncCategories();
+
+}
+
+
+function moveRubrika(i,dir){
+
+  const j=i+dir;
+
+  if(j<0||j>=STATE.categories.length)return;
+
+  reorderRubrika(i,j);
+
+}
+
+
+/* push category order to GitHub (so all visitors see it) */
+let syncTimer=null;
+
+function syncCategories(){
+
+  clearTimeout(syncTimer);
+
+  syncTimer=setTimeout(async()=>{
+
+    try{
+      const ok=await saveToGitHub();
+      if(ok){
+        toast('Category order saved to GitHub ✓','success');
+      }
+    }catch(e){}
+
+  },1200);
+
+}
+
+
+function addRubrika(){
+
+  const inp=document.getElementById('newRubrikaInput');
+
+  const name=inp.value.trim();
+
+  if(!name||STATE.categories.includes(name)){
+    toast('Category already exists or is empty.','error');
+    return;
+  }
+
+  STATE.categories.push(name);
+
+  saveLocalState();
+
+  inp.value='';
+
+  renderRubrikaList();
+  renderNav();
+  renderSidebar();
+
+  syncCategories();
+
+  toast(`Category "${name}" added.`,'success');
+
+}
+
+
+function deleteRubrika(i){
+
+  const name=STATE.categories[i];
+
+  STATE.categories.splice(i,1);
+
+  saveLocalState();
+
+  renderRubrikaList();
+  renderNav();
+  renderSidebar();
+
+  syncCategories();
+
+  toast(`Category "${name}" removed.`,'success');
+
+}
+
+
+/* ============================================================
+   SEARCH
+============================================================ */
+
+function setupSearch(){
+
+  let t;
+
+  const inp=document.getElementById('searchInput');
+
+  inp.addEventListener('input',()=>{
+
+    document.getElementById('searchClear').style.display=inp.value?'':'none';
+
+    /* searching from inside an article goes back to the results */
+    if(inp.value.trim()&&document.getElementById('readerSection').classList.contains('open')){
+      closeReader();
+    }
+
+    clearTimeout(t);
+
+    t=setTimeout(renderArticles,200);
+
+  });
+
+  inp.addEventListener('keydown',e=>{
+
+    if(e.key==='Escape'){
+      clearSearchBox(true);
+    }
+
+    if(e.key==='Enter'){
+      clearTimeout(t);
+      renderArticles();
+      window.scrollTo({top:0,behavior:'smooth'});
+    }
+
+  });
+
+}
+
+
+/* ============================================================
+   MODALS
+============================================================ */
+
+function openModal(id){
+  document.getElementById(id).classList.add('open');
+}
+
+function closeModal(id){
+  document.getElementById(id).classList.remove('open');
+}
+
+
+/* ============================================================
+   TOAST
+============================================================ */
+
+function toast(msg,type='success'){
+
+  const c=document.getElementById('toastContainer');
+
+  const t=document.createElement('div');
+
+  t.className=`toast ${type}`;
+  t.textContent=msg;
+
+  c.appendChild(t);
+
+  requestAnimationFrame(()=>requestAnimationFrame(()=>t.classList.add('show')));
+
+  setTimeout(()=>{
+
+    t.classList.remove('show');
+
+    setTimeout(()=>t.remove(),300);
+
+  },3500);
+
+}
+
+
+/* ============================================================
+   ESCAPE
+============================================================ */
+
+function esc(s){
+
+  return String(s||'')
+    .replace(/&/g,'&amp;')
+    .replace(/</g,'&lt;')
+    .replace(/>/g,'&gt;')
+    .replace(/"/g,'&quot;')
+    .replace(/'/g,'&#39;');
+
+}
+
+
+/* ============================================================
+   CSS ESCAPE
+============================================================ */
+
+function cssEscape(value){
+
+  if(window.CSS&&typeof window.CSS.escape==='function'){
+    return window.CSS.escape(value);
+  }
+
+  return String(value).replace(/["\\]/g,'\\$&');
+
+}
+
+
+/* ============================================================
+   DATE FORMAT
+============================================================ */
+
+function formatDate(iso){
+
+  if(!iso)return '';
+
+  return '<span translate="no">'+new Date(iso).toLocaleDateString(LOCALE(),{
+    day:'numeric',
+    month:'long',
+    year:'numeric'
+  })+'</span>';
+
+}
+
+
+/* ============================================================
+   READING TIME
+============================================================ */
+
+function readTime(t){
+
+  return Math.max(
+    1,
+    Math.round(stripMedia(t).split(/\s+/).filter(Boolean).length/200)
+  );
+
+}
+
+
+/* ============================================================
+   CONTENT -> HTML (paragraphs + inline images/videos)
+============================================================ */
+
+function formatContent(text){
+
+  if(isRte(text)){
+    return sanitizeHtml(String(text).trimStart().slice(RTE_MARK.length));
+  }
+
+  return String(text||'')
+    .split('\n')
+    .map(l=>l.trim())
+    .filter(Boolean)
+    .map(line=>{
+
+      const m=line.match(MEDIA_LINE);
+
+      if(m){
+        return renderMedia(m[1].toLowerCase(),parseAttrs(m[2]));
+      }
+
+      return`<p>${esc(line)}</p>`;
+
+    })
+    .join('');
+
+}
+
+</script>
+
+</body>
+</html>
